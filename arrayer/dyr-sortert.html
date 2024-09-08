@@ -7,15 +7,18 @@
 </head>
 <body>
     <p id="listet"></p>
+    <p id="tostringprint"></p>
     <script>
         const dyr = ["Hase","Pferd","Hund","Katze","Frosch","Maus","Spatz","Karpfen","Wurm","Drachen"]
 
-        const showRow3 = dyr[2]
-        const showRow7 = dyr[6]
+        dyr.push("Einhorn", "Ameise")
 
-        document.getElementById("listet").innerHTML = `Her er det listet opp noen dyr, for eksempel ${showRow3} og ${showRow7}.`
+        dyr.sort()
 
-    </script>
+        const antallDyr = dyr.length
+
+        document.getElementById("listet").innerHTML = `Antall dyr:  ${antallDyr} `
+        document.getElementById("tostringprint").innerHTML = dyr.toString()
+
+     </script>
 </body>
-</html>
-
