@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <ul id="utskrift"></ul>
+
+    <script>
+        const events = [
+            // Arrayen [] inneholder to objekter {}. Enhver objekt inneholder to par av nøkkel-verdier, hvor nøklene er henholdsvis year og event, og verdiene er årstall og en string.
+            {year: 1969, 
+                event: "ARPA"}, 
+            {year: 1971, 
+                event: "email"}
+            ]
+
+             //  Fortsatt usikker mellom const og let
+        let eventListHTML = ""
+
+             // "Item" reprensenterer altså enhver objekt i arrayen. Vi henter ut verdiene via referansestien object.nøkkel hvor item er objekt 
+        events.map(function(item){
+            eventListHTML += `<li>${item.year}: ${item.event}</li>`
+        })
+            // ChatGPT sier at gjenbruk av ´events´ som i cheatsheets hadde vært dårlig praksis. Det fører ikke til feil fordi const events brukes kun lokalt innen script. 
+        document.getElementById("utskrift").innerHTML = eventListHTML
+
+    </script>
+</body>
+</html>
