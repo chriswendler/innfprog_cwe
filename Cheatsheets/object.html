@@ -17,9 +17,9 @@
             courses: ["Programmering", "Litteratur"]
         }
 
-        document.getElementById("contactinfo")
+        document.getElementById("contactinfo").innerHTML = `${lecturer.personname} sitter paa kontor ${lecturer.office}. Favorittkurset er: ${lecturer.courses[1]}`
 
-        console.log(document.getElementById("contactinfo"))
+       // console.log(document.getElementById("contactinfo"))
     </script>
     
 </body>
