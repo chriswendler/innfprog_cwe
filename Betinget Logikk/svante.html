@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svantes karakter</title>
+</head>
+<body>
+    <h1>Svantes karakter</h1>
+    <p id="resultat"></p>
+
+    <script>
+        // Først: registrere Svantes resultater på deleksamene. ("Vi tar dem imot")
+        var deleksamen1 = 49, deleksamen2 = 42, deleksamen3 = 41, deleksamen4 = 44; 
+        // Dette er det samme som å skrive 4x var under hverandre.
+
+        // Vi oppretter en teller (""Vi gjør klar"). Utgangstilstanden er ingen beståtte:
+        var antallEksamenerBestaatt = 0;
+
+        // Så må vi sjekke hver deleksamen hver for seg.
+        if (deleksamen1 >= 40) {
+            antallEksamenerBestaatt++;
+            // formuleringen med ++ er det som antallEksamenerBestaatt = antallEksamenerBestaatt + 1
+        }
+        if (deleksamen2 >= 40) {
+            antallEksamenerBestaatt++;
+        }
+        if (deleksamen3 >=40) {
+            antallEksamenerBestaatt++;
+        }
+        if (deleksamen4 >=40) {
+            antallEksamenerBestaatt++;
+        }
+
+        if (antallEksamenerBestaatt === 4) {
+            // Vi regner ut karakter. Dette er en del av/skjer innenfor den første forutsetningen, beståelse av deleksamene. 
+                    // Her skal vi ta imot og skrive ut resultat. 
+        
+            var sumDelEksamener = deleksamen1 + deleksamen2 + deleksamen3 + deleksamen4;
+            // Skrive en variable som skal inneholde karakter.
+            let karakterVerdi = ""; 
+
+            // Sjekke poengsummen mot trinner i karakterskalaen. 
+
+            if (sumDelEksamener > 360) {
+                karakterVerdi = "A"
+            } else if (sumDelEksamener > 320) {
+                karakterVerdi = "B"
+            } else if (sumDelEksamener > 240) {
+                karakterVerdi = "C"
+            } else if (sumDelEksamener > 200) {
+                karakterVerdi = "D";
+            } else if (sumDelEksamener >= 160) {
+                karakterVerdi = "E"
+            } else {
+                karakterVerdi = "F"
+            }
+        // skrive ut resultat av kurset 
+        document.getElementById("resultat").innerHTML = "Svante har bestått kurset med karakter " + karakterVerdi;
+
+
+
+
+        } // Avslutter if-test om antallEksamenerBestaatt
+        else {
+            document.getElementById("resultat").innerHTML = "Svante har ikke bestått alle deleksamener og derfor ikke brstått kurset."
+        }
+
+
+        
+    
+    </script>
+    
+</body>
+    
+</html>
