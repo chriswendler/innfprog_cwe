@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Cheat Sheet</title>
+</head>
+<body>
+    <ul id="profiles"></ul>
+
+    <script>
+        const lecturers = [
+            {
+                personname: "Marius Akerbek",
+                office: "Helsfyr",
+                epost: "chriswen@hiof.no",
+                birthyear: 1980,
+                courses: ["Programmering", "Komdesign", "UI Design"]
+            },
+            {
+                personname: "Ann C",
+                office: "Toyen",
+                epost: "Henrik@funpost.com",    
+                birthyear: 1992,
+                courses: ["webutvikling", "interaktive nettsteder"]
+            },
+            {
+                personname: "Ole",
+                office: "D1",
+                epost: "ole@hiof.no",    
+                birthyear: 1993,
+                courses: ["datasikkerhet"]
+            },
+            {
+                personname: "daniela",
+                office: "d2",
+                epost: "daniela@hiof.no",    
+                birthyear: 1977,
+                courses: ["designmetoder", "ui design"]
+            }
+        ]
+
+        /*
+            Foer vi skriver ut arrayen, skal vi filtrere vekk forelesere foedt foer 1990.
+            Vi maa gaa gjennom arrayen med et filter: .filter
+            Filtrering: 1. Vi mellollagrer hvert element i en variabel. Her bruker vi den samme variablene (lecturer)
+            som tidligere.
+            For hver lecturer gjoer vi en sammenligning (akkurat som en if-betingelse). 
+            Etter filtering, skriver vi ut de gjenvaerende, se kommentar i opprinnelig fil.
+        */
+        lecturers.filter(lecturer => lecturer.birthyear >= 1990).map(lecturer => document.getElementById("profiles").innerHTML += `<li>${lecturer.personname}
+            <ul>
+                 ${lecturer.courses.map(course => `<li>${course}</li>`).join("")}
+             </ul>
+        </li>`)
+
+        /* 
+            Dersom vi bruker .map paa en array med kun tekststrenger, maa vi bruke metoden .
+            join etter at vi har kjort .map. Dette for aa fjerne komma-genering. 
+        */
+        // console.log(lecturers)
+    </script>
+    
+</body>
+</html>
