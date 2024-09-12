@@ -11,11 +11,11 @@
     <script>
         const lecturers = [
             {
-                personname: "Christian Wendler",
+                personname: "Marius Akerbek",
                 office: "Helsfyr",
                 epost: "chriswen@hiof.no",
                 birthyear: 1980,
-                courses: ["Programmering", "Litteratur"]
+                courses: ["Programmering", "Komdesign", "UI Design"]
             },
             {
                 personname: "Henrik",
@@ -39,8 +39,16 @@
                 courses: ["designmetoder", "ui design"]
             }
         ]
+
+        /*
+            Vi skal skrive ut hver foreleseren i arrayen som et listepunkt <li>
+            Vi må gå gjennom hele arrayen: .map
+            Når vi .mapper må vi mellomlagre element i en variabel: lecturer
+            For hver lecturer må vi legge til en <li> i <ul id="profiles">    
+        */
+        lecturers.map(lecturer => console.log(lecturer))
     
-        console.log(lecturers)
+        // console.log(lecturers)
     </script>
     
 </body>
