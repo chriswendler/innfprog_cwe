@@ -14,9 +14,11 @@
         
         let htmlString = ""
 
-        for(let teller =0; teller <=9; teller++) {
-            console.log(animals[teller])
+        for(let teller =0; teller < animals.length; teller++) {
+           htmlString += `<li>Tier auf Nummer ${teller+1}: ${animals[teller]}</li>`
         } 
+
+        document.getElementById("animals").innerHTML = htmlString
         
         
 
