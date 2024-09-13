@@ -6,16 +6,16 @@
     <title>Object Cheat Sheet</title>
 </head>
 <body>
-    <ul id="profiles"></ul>
+    <ul> id="profiles"</ul>
 
     <script>
         const lecturers = [
             {
-                personname: "Marius Akerbek",
+                personname: "Christian Wendler",
                 office: "Helsfyr",
                 epost: "chriswen@hiof.no",
                 birthyear: 1980,
-                courses: ["Programmering", "Komdesign", "UI Design"]
+                courses: ["Programmering", "Litteratur"]
             },
             {
                 personname: "Henrik",
@@ -39,24 +39,8 @@
                 courses: ["designmetoder", "ui design"]
             }
         ]
-
-        /*
-            Vi skal skrive ut hver foreleseren i arrayen som et listepunkt <li>
-            Vi må gå gjennom hele arrayen: .map
-            Når vi .mapper må vi mellomlagre element i en variabel: lecturer
-            For hver lecturer må vi legge til en <li> i <ul id="profiles">    
-        */
-        lecturers.map(lecturer => document.getElementById("profiles").innerHTML += `<li>${lecturer.personname}
-            <ul>
-                 ${lecturer.courses.map(course => `<li>${course}</li>`).join("")}
-             </ul>
-        </li>`)
-
-        /* 
-            Dersom vi bruker .map paa en array med kun tekststrenger, maa vi bruke metoden .
-            join etter at vi har kjort .map. Dette for aa fjerne komma-genering. 
-        */
-        // console.log(lecturers)
+    
+        console.log(lecturers)
     </script>
     
 </body>

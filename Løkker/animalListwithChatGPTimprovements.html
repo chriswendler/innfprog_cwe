@@ -7,20 +7,18 @@
 </head>
 <body>
 
-    <ul id="animals"></ul>
+    <ol id="animals"></ol>
 
     <script>
         const animals = ["Hase","Pferd","Hund","Katze","Frosch","Maus","Spatz","Karpfen","Wurm","Drachen"]
         
-        const htmlString = ""
+        // oppdatere innerHTML direkte 
+        const animalListElement = document.getElementById("animals");
 
-        for(let teller =0; teller < animals.length; teller++) {
-           htmlString += `<li>Tier auf Nummer ${teller+1}: ${animals[teller]}</li>`
-        } 
-
-        document.getElementById("animals").innerHTML = htmlString
-        
-        
+        animals.forEach((animalItem, index) => {
+            animalListElement.innerHTML += `<li>Tier auf Nummer ${index+1}: ${animalItem}</li>`
+        }
+        );
 
     </script>
     

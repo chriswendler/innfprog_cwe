@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>iOS Games</h1> 
+    <ul id="Filter"></ul>
+
+    <script>
+        const games = [
+            {title: "Angry Birds", platforms: ["iOS","Android"]}, 
+            {title: "Nongram", platforms: ["Android"]}, 
+            {title: "Plants vs Zombies", platforms: ["iOS", "Android", "Windows", "MacOS"]},
+            {title: "Punball", platforms: ["Windows","Android"]},
+            {title: "Planet Zoo", platforms: ["Windows", "MacOS"]}
+    ] 
+// 'item' er her et ord vi har valgt vilkårlig som står for de ulike objektene. Som resultat av dette steg, er det kun 2 objekter ighjen.
+        const KunPaaiOS = games.filter(
+            (item) =>
+            item.platforms.includes("iOS")
+        )
+// Hittil er det ingen utskrift. Map-metoden oppretter en ny array. Game står for den aktuelle element i KunPaaiOS arrayen. 
+        const KunPaaiOSHTML = KunPaaiOS.map(game => `<li>${game.title}</li>`)
+
+        document.getElementById("Filter").innerHTML = KunPaaiOSHTML
+
+    </script>
+    
+</body>
+</html>

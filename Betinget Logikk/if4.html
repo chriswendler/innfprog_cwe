@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doble betingelser</title>
+</head>
+<body>
+
+    <p id="utskrift"></p>
+
+    <script>
+        //Deklarerer to variabler for oppnådd karakter i to kurs
+        const ITF19019_grade = "A";
+        const ITF10511_grade = "F";
+
+        let ITF19019_passed = "";
+
+        ITF19019_grade === "F" ? ITF19019_passed = true : ITF19019_passed = false;
+
+        let ITF10511_passed = "";
+
+        ITF10511_grade === "F" ? ITF10511_passed = true : ITF10511_passed = false;
+
+        //Deklarerer en variabel for telling
+        let countPassed = 0; 
+        
+        //En if-test for å sjekke om ITF19019 er bestått (_passed = true)
+        //Hvis den er det, skal vi oppdatere telleren i variabelen countPassed med 1.
+        if(ITF19019_passed === true) {
+            countPassed++;
+        } 
+
+        if(ITF10511_passed === true) {
+            countPassed++;
+        }
+
+        const printText = `"Du har bestaatt ${countPassed} av 2 kurs"`;
+
+        document.getElementById("utskrift").innerHTML = printText;
+
+    </script>
+    
+</body>
+</html>
