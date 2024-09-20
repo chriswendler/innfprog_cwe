@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<ul id="attendees"></ul>
+<script>
+    const
+        names = ["Ali", "ben", "chris", "dean"];
+        
+    function createList(ourArray, htmlid) {
+/*
+ourArray: This parameter is a placeholder for any array you want to pass into the function.
+htmlid: This is a placeholder for the ID of the HTML element you want to work with.
+At this point, no values are assigned to array and htmlid. The function is simply defined.
+*/
+
+        let listHTML = "";
+
+// // Loop through the array (which is now `names`) and build list items:
+        ourArray.map(item => 
+            {
+            listHTML += 
+            `<li>${item}<li>`
+            }
+    );
+    // Find the HTML element with the ID `htmlid` (which is now "attendees")
+    // Insert the constructed HTML list into that element
+            document.getElementById(htmlid).innerHTML = listHTML
+    }
+/*
+When you call the function, you provide specific values for the parameters. This is called "passing arguments" to the function:
+names is the array you previously defined, "attendees" is a string representing the HTML ID.
+*/
+    createList(names, "attendees")
+/*
+This process of "passing" arguments to parameters allows the function 
+to work with different arrays and HTML elements whenever you call it.
+*/
+
+</script>
+
+</html>
