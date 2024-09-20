@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svantes karakter</title>
+</head>
+<body>
+    <h1>Svantes karakter</h1>
+    <p id="resultat"></p>
+
+    <script>
+        let resultat = "";
+        const poengtall = 180;
+// Dette må vi gjøre først ifølge ChatGPT. Det fungerer ikke dersom man kalkulerer resultatverdiene etter den andre if-else
+        if (poengtall > 360) {resultat = "A";
+        } else if (poengtall > 320) {
+            resultat = "B";
+        } else if (poengtall > 240) {
+            resultat = "C";
+        } else if (poengtall > 200) {
+            resultat = "D";
+        } else if (poengtall >= 160) {
+            resultat = "E"
+        } else {
+            resultat = "F"
+        }
+
+// søk gjennom dokumentet etter et element med et bestemt id og legg innerHTML inn i det
+        if (resultat === "F") {document.getElementById("resultat").innerHTML = "Svantet har ikke bestått kurset.";
+
+        } else {document.getElementById("resultat").innerHTML = "Svantet har bestått kurset med karakter " + resultat;
+
+        }
+        
+    
+    </script>
+    
+</body>
+    
+</html>

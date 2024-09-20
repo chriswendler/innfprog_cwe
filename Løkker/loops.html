@@ -6,8 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <h1 Regn ut summen av alle tall mellom <span id="start">X</span> og <span id="stopp"></span></h1>
+    <h1></h1> Regn ut summen av alle tall mellom <span id="start">X</span> og <span id="stopp">Y</span></h1>
     <p id="utregning"></p>
+    <h1> Vis alle heltall som er delelig paa <span id="deltall">Z</span> mellom </span id="delstart">
+    <p id="delresultater"></p>
 
 
     <script>
@@ -16,20 +18,25 @@
         console.log("Jeg kjører fortsatt: " + whileteller)
         whileteller++
     } 
+
     // Utregning av alle tall mellom X og Y 
-    const x = 1
-    const y = 100
+    const x = 7
+    const y = 50
     let sum = 0
 
+    document.getElementById("start").innerHTML = x
+    document.getElementById("stopp").innerHTML = y
+
     for (let teller = x; teller <= y; teller++) {
-        sum += teller
-        if(teller === y){
+        sum += teller // Det er det samme som sum = sum + teller, Sparschwein-Analogie
+        if(teller === y) {
             document.getElementById("utregning").innerHTML += teller  + " = " + sum
         } else {
-             document.getElementById("utregning").innerHTML += teller + " + " + 
+            document.getElementById("utregning").innerHTML += teller + " + "  
         }
-       
     } 
+
+ 
 
     </script>
 </body>

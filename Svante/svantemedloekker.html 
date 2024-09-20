@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poengberegning</title>
+</head>
+
+<body>
+    <p id="utskrift"></p>
+
+    <script>
+        // Gjøre klar noen variabler som vi trenger
+        // Svantes poeng på deleksamene
+
+        var poeng = [72, 28, 57, 66];  // poeng[0], var index = 0; poeng[index]
+        // Teller for antall deleksamner som er bestaatt 
+        var antallBestaatt = 0;
+        // Teller for totalt antall poeng
+        var totalePoeng = 0; 
+
+        // Vi skal lage en løkke som går gjennom hver enkelt verdi i arrayen poeng. 
+        // For hver runde løkken går, må vi
+        // - sjekke om deleksamen er bestått (poeng må være like eller høyere enn 40)
+        // - hvis deleksamen er bestått, skal telleren antallBestaatt plusses på med 1
+        // - plusse poengen (verdiene fra arrayen) på totaePoeng
+
+        for(var index = 0; index < poeng.length; index++){
+            if(poeng[index] >= 40){
+                antallBestaatt++;
+            }
+        }
+
+        console.log("Antall eksamer bestått "+ antallBestaatt);
+
+    </script>
+
+</body>
+</html>

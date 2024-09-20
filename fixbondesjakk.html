@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tripp, Trapp, Tresko</title>
+
+    <style>
+        .celle {
+            border: 6px solid #2c3e50;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 4em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body>
+    <section id="playerturn">Spiller <span id="player"></span>(<span id="playermark"></span>) sin tur:</section>
+    <section id="gamearea">
+        <div id="celle0" class="celle"></div> 
+        <div id="celle1" class="celle"></div> 
+        <div id="celle2" class="celle"></div>
+        <div id="celle3" class="celle"></div>
+        <div id="celle4" class="celle"></div>
+        <div id="celle5" class="celle"></div>
+        <div id="celle6" class="celle"></div>
+        <div id="celle7" class="celle"></div>
+        <div id="celle8" class="celle"></div>
+    </section>
+    <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
+    
+    <script>
+        var Spillstatus = true;
+
+        var player = 1;
+        var playermark = "X";
+        var antallSpill = 1;
+
+        var winningCombos = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8]
+            [0, 3, 6]
+            [1, 4, 7]
+            [2, 5, 8]
+            [0, 4, 8]
+            [2, 4, 6]
+        ];
+
+        var spillerBrikker = ["","","","","","","","",""]; // kan senere fylles med spillervalg
+
+        document.getElementById("celle0")
+
+
+    </script>
+</body>
+</html>
