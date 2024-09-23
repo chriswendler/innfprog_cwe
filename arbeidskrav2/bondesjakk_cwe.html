@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tripp, trapp, tresko</title>
+    <title>Drei gewinnt oder Bondesjakk</title>
 
     <!--
+    TIL OPPGAVE 2:
     Et forsøk som ikke fungerte:
     '<style id="mystyle"></style>
     document.getElementById("mystyle").style.backgroundColor = "#FFD700";'' 
@@ -34,6 +35,22 @@
             max-width: 600px;
             padding: 10px;
             border-radius: 5px;
+        }
+        /*
+        TIL OPPGAVE 3
+        Her måtte jeg høre med ChatGPT om hvordan CSS kunne lenkes til <p>-tagen nedenfor: da tagen ikke inneholder en id
+        som playerturn har, kan man ikke bruke #p men skriver bare p. Innholder er i p-CSS er kopiert fra #playerturn, bare 
+        skriftstørrelse er endret.
+        Varselet kan sikkert unnlates med 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. Om den behøvs
+        vil være mer et spørsmål for en produktdesigner enn for utvikleren. 
+        */
+        p{
+            color: #34495e;
+            font-size: 2em;
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 10px;
+            border-radius: 5px;   
         }
         
         #gamearea {
@@ -81,6 +98,8 @@
 
 <body>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
+    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms, se kommentar ovenfor-->
+    <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
     <section id="gamearea">
         <div id="celle0" class="celle"></div>
         <div id="celle1" class="celle"></div>
@@ -99,15 +118,15 @@
         var player = 1;
         var playermark = "X";
 
-        // Her tror jeg er kommentaren lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen: 
+        // Her tror jeg er kommentaren lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen. 
+        // Kommentaren i den opprinnelige filen lyder: 
+        // 'Dette skriver vi ut i <span>-tagene med id-ene "player" og "playermark" i <div>-tagen med id "playerturn".'
 
-        //Dette skriver vi ut i <span>-tagene med id-ene "player" og "playermark" i <div>-tagen med id "playerturn"
         document.getElementById("player").innerHTML = player;
         document.getElementById("playermark").innerHTML = playermark;
 
         var antallSpill = 1;
 
-        // Syntaxfeilen her oppdaget jeg ikke selv, men måtte bruke chatgpt for å spørre om feil i første delen av koden
         var winningCombos = [
             [0, 1, 2],
             [3, 4, 5],
@@ -119,16 +138,7 @@
             [2, 4, 6]
         ];
 
-        //For å kunne sammenligne vinnerkombinasjoner med hvor spillerne har plassert sine spillermerker,
-        //trenger vi en oversikt over Spillbrettplasseringer. Disse kan vi lagre i en array, siden vi fra
-        //starten av koden så at spillbrettet kan tenkes på som indexer i en array.
         var spillerBrikker = ["","","","","","","","",""];
-
-        //Videre trenger vi å registrere når en spiller klikker på en rute i spillbrettet.
-        //Når en spiller klikker på en rute, skal vi få noe til å skje i koden, derfor kaller vi
-        //en funksjon kalt spill(), og sender en parameter inn i funksjonen for å fortelle hvilken rute
-        //(0-8, igjen trenger vi koblingen mellom array-indexer og spillbrettet fra starten av koden)
-        //som er trykket på.
 
         document.getElementById("celle0").addEventListener("click", function() {
             spill(0);
@@ -158,40 +168,46 @@
             spill(8);
         });
 
-
-
         function spill(celle) {
 
             // Her oppdaget jeg skrivefeilen uten bruk av konsolen ved å lese gjennom og kopiere deler av koden manuelt (for forståelse)
             if(spillStatus === true) {
-                //Er cellen ledig? Vi må sjekke hvilken celle som er trykket på,
-                //for så å sjekke om innholdet er en tom streng:
+
                 var cellSpace = document.getElementById("celle"+celle).innerHTML;
                 
                 
                 if(cellSpace === "") {
                    
                     if (player === 1) {
-                        //Plasser symbol på spillerbrettet i nettleseren
+                        //dette skjer i nettleseren:
                         document.getElementById("celle"+celle).innerHTML = "X";
-                        //og befolke arrayen som holder kontroll på spillbrettet
+                        //og befolke arrayen som holder kontroll på spillbrettet (kun omformulert for å forstå, ingen endring i koden)
                         spillerBrikker[celle] = "X";
+                        // OPPGAVE 3: Dette gjøres for å hindre at en spiller plasserer mens vi utsetter sjekk av vinneren: 
+                        spillStatus = false;
                     } else {
                         document.getElementById("celle"+celle).innerHTML = "O";
                         spillerBrikker[celle] = "O";
+                        spillStatus = false;
                     }
 
                     // Her stusset jeg, ettersom det er kun '!=' og'!==' som er med i 'Oversikt over sammenligningsoperatorer'i LMS, kapittel 4. 
-                    //Med hjelp av ChatGPT finner jeg ut at årsaken at den ikke er med er at den gjør noe (negasjon) mens de andre to sammenligner (sjekker om noe er sant)
+                    // Med hjelp av ChatGPT fant jeg ut at årsaken at den ikke er med er at den gjør noe (negasjon) mens de andre to bare sammenligner (sjekker om noe er sant)
                     if(!spillerBrikker.includes("")) {
                         document.getElementById("playerturn").innerHTML = "Uavgjort! Ingen vant...";
                         spillStatus = false;
                     }
                     
-                    //Når brikken er plassert på spillerbrettet, må vi sjekke om den - og brikkene rundt - 
-                    //utgjør en vinnerkombinasjon. Se egen funkjson:
-
-                const delaySjekkVinner = setTimeout(sjekkVinner, 3000);
+                /* OPPGAVE 3:
+                Her gjorde jeg først en feil og skrev både variablen (const = delay) og
+                deretter funksjonen igjen. Resultatet var at funksjonen kjørtes omiddelbart men 
+                vinner byttet etter delayen. Ettersom det går an å sette spillmerke uansett delayen 
+                (testet med 3000 og 5000 ms), har jeg tatt grep, se nedenfor.
+                ChatGPT foreslo også at det er mulig å bygge inn delayen lengre opp, men dette
+                hadde vært mer komplisert og krever 3 parametere. (Prompt: 
+                in the above longer code, how can i delay the  function spill(celle) execution?)
+                */
+                const delaySjekkVinner = setTimeout(sjekkVinner, 1000);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -200,9 +216,11 @@
                     return;
                 } 
                 
-                //Når spillerens tur er ferdig, er det neste spillers tur.
+                // TIL OPPGAVE 3: Når spillerens tur er ferdig, er det neste spillers tur. For å hindre at man kan
+                // sette spillmerket mens vi utsetter, har jeg selv kommet på at man kan flytte ut denne prosessen gjennom
+                // en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
 
-                const delayChangePlayers = setTimeout(changePlayers, 3000);
+                const delayChangePlayers = setTimeout(changePlayers, 1000);
 
             //Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
@@ -245,50 +263,41 @@
                 document.getElementById("newgame").style.display = "block";
 
                 /*  OPPGAVE 2: ENDRE FARGE
-                    Ut ifra hint misforsto jeg oppgavestillingen først. Hint
-                    viser til 'document.body.style.backgroundColor = "red".' Så skrev jeg:
+                    Først misforsto jeg oppgavestillingen. Hint viser
+                    til 'document.body.style.backgroundColor = "red".' Så jeg skrev:
                     document.body.style.backgroundColor = "#FFD700";
                     Dette hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
-                    mer målrettet. Da dette er det eneste vi vil endre, passer det bedre med 'backgroundColor'. 
+                    mer målrettet. 
                     Jeg leste oppgavestillingen igjen og ble usikker og spurte ChatGPT hvordan man kan endre
                     'bakgrunnsfargen i <div> med id playerturn'  
                 */
-                
 
                 document.getElementById("playerturn").style.backgroundColor = "#FFD700";
                 
-
-                // se kommentar under <style> om hvorfor dette ikke fungerer:
+                // se kommentar under <style> ovenfor (linje 10) om hvorfor dette ikke fungerer:
                 // document.getElementById("mystyle").style.backgroundColor = "#FFD700"; 
 
-                //Sett spillstatus til false, slik at ingen spillere får plassere
-                //flere brikker på brettet - dette løses med sjekken i funksjonen spill()
                 spillStatus = false;
             }
         // her slutter sjekkVinner
         }
 
+        // TIL OPPGAVE 3; Vi skal forhindre at man kan sette brikker og at teksten endres mens vi venter på sjekkVinner: 
         function changePlayers() {
         if (player === 1) {
                     player = 2;
                     playermark = "O";
+                    spillStatus = true;
                 } else {
                     player = 1;
                     playermark = "X";
+                    spillStatus = true;
                 }
                 if(spillStatus === true) {
                     document.getElementById("player").innerHTML = player;
                     document.getElementById("playermark").innerHTML = playermark;
                 }}
 
-
-
-        //Når et spill er avsluttet, og et nytt skal begynne, må vi gjøre klar en del ting:
-        // 1) Fjerne brikkene som er plassert på brettet - både i grensesnittet og i programmet vårt
-        // 2) Sette spillstatus til true, slik at vi får lov til å trykke på rutene i spillbrettet igjen
-        // 3) Sette turen til spiller en og spillersymbolet til X
-        // 4) Fjerne melding om vinner eller uavgjort, og oppdatere med spillers tur-tekst
-        //Dette samler vi i en funksjon, slik at vi kan kalle funksjonen og utføre alle disse tingene når vi trenger det:
         function restartGame() {
             // 1)
             spillerBrikker = ["","","","","","","","",""];
