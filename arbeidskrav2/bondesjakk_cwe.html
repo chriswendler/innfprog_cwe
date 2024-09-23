@@ -191,7 +191,7 @@
                     //Når brikken er plassert på spillerbrettet, må vi sjekke om den - og brikkene rundt - 
                     //utgjør en vinnerkombinasjon. Se egen funkjson:
 
-                const myDelay = setTimeout(sjekkVinner, 3000);
+                const delaySjekkVinner = setTimeout(sjekkVinner, 3000);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -202,7 +202,7 @@
                 
                 //Når spillerens tur er ferdig, er det neste spillers tur.
 
-                changePlayers();
+                const delayChangePlayers = setTimeout(changePlayers, 3000);
 
             //Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
@@ -210,8 +210,6 @@
             }
         // end of function spill
         }
-
-
 
         function sjekkVinner() {
             var rundenVunnet = false;
