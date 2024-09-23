@@ -129,6 +129,7 @@
         //en funksjon kalt spill(), og sender en parameter inn i funksjonen for å fortelle hvilken rute
         //(0-8, igjen trenger vi koblingen mellom array-indexer og spillbrettet fra starten av koden)
         //som er trykket på.
+
         document.getElementById("celle0").addEventListener("click", function() {
             spill(0);
         });
@@ -157,7 +158,6 @@
             spill(8);
         });
 
-        
 
 
         function spill(celle) {
@@ -190,28 +190,19 @@
                     
                     //Når brikken er plassert på spillerbrettet, må vi sjekke om den - og brikkene rundt - 
                     //utgjør en vinnerkombinasjon. Se egen funkjson:
-                    sjekkVinner();
+
+                const myDelay = setTimeout(sjekkVinner, 3000);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
                     // ChatGpt opplyser likevel at "alert" er definert JS. Etterpå finner jeg samme info også under JS Popup Boxes https://www.w3schools.com/js/js_popup.asp   
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
-                }
-
+                } 
+                
                 //Når spillerens tur er ferdig, er det neste spillers tur.
 
-                if (player === 1) {
-                    player = 2;
-                    playermark = "O";
-                } else {
-                    player = 1;
-                    playermark = "X";
-                }
-                if(spillStatus === true) {
-                    document.getElementById("player").innerHTML = player;
-                    document.getElementById("playermark").innerHTML = playermark;
-                }
+                changePlayers();
 
             //Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
@@ -219,6 +210,8 @@
             }
         // end of function spill
         }
+
+
 
         function sjekkVinner() {
             var rundenVunnet = false;
@@ -274,7 +267,23 @@
                 //flere brikker på brettet - dette løses med sjekken i funksjonen spill()
                 spillStatus = false;
             }
+        // her slutter sjekkVinner
         }
+
+        function changePlayers() {
+        if (player === 1) {
+                    player = 2;
+                    playermark = "O";
+                } else {
+                    player = 1;
+                    playermark = "X";
+                }
+                if(spillStatus === true) {
+                    document.getElementById("player").innerHTML = player;
+                    document.getElementById("playermark").innerHTML = playermark;
+                }}
+
+
 
         //Når et spill er avsluttet, og et nytt skal begynne, må vi gjøre klar en del ting:
         // 1) Fjerne brikkene som er plassert på brettet - både i grensesnittet og i programmet vårt
