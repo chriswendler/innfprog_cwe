@@ -230,8 +230,6 @@
                 // sette spillmerket mens vi utsetter, har jeg selv kommet på at man kan flytte ut denne prosessen gjennom
                 // en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
 
-                const delayChangePlayers = setTimeout(changePlayers, 1000);
-
             // Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
                 return;
@@ -261,8 +259,7 @@
                 //Break: Avbryter løkken 
                 if(brikke1 === brikke2 && brikke2 === brikke3) {
                     rundenVunnet = true;
-                    break;
-                    
+                    break;      
                 }
             }
 
@@ -300,11 +297,24 @@
                 Her ser jeg at ID også brukes i eksempel på https://www.w3schools.com/jsref/prop_style_color.asp 
                 Jeg forsøker å skrive document.getElementById("celle1").style.color = "FFD700" på ulike plasser i <script>
                 og det fungerer.
+                vinnerKomboPlass1 viser til et tallverdi som tilsvarer den cellen i arrayen som inneholder brikken i vinnerkombinasjon.
+                EksempleL: vinnerkombinasjon er cellene 3,4 og 5. Da er vinnerKomboPlass1 = winningCombos[1][0] som er 3. 
                 */
 
+                document.getElementById("celle" + vinnerKomboPlass1).style.color = "#FFD700";
+                document.getElementById("celle" + vinnerKomboPlass2).style.color = "#FFD700";
+                document.getElementById("celle" + vinnerKomboPlass3).style.color = "#FFD700";
+
                 spillStatus = false;
-            }
-        // her slutter sjekkVinner
+            } else {
+            // else = hvis runden ikke er vunnet
+            // Change player skulle opprinnelig foretas som del av spill-funksjonen. Etter at det ble satt Timeout, førte dette
+            // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
+            // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
+            // av spill. Det går likevel ikke å sette change player for seg selv etter sjekkVinner.  
+                setTimeout(changePlayers, 100);
+            };
+        // her slutter sjekkVinner:
         }
 
         // TIL OPPGAVE 3; Vi skal forhindre at man kan sette brikker og at teksten endres mens vi venter på sjekkVinner: 
@@ -340,7 +350,6 @@
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
         }
 
-        
     </script>
 </body>
 
