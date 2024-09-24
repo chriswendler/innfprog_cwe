@@ -58,11 +58,18 @@
             height: 600px;
             margin: 0 auto;
             background-color: #34495e;
+            /* OPPGAVE 4: Jeg tentkte først å finne ut hvorfor spillerBrikker er i utgangspunktet hvitet. Jeg spurte ChatGPT
+            (Why are the playermarks on the tic tac toe board white?) og ble henvist bl.a. til CSS. Ved gjennomlesning 
+            finner jeg denne fargen. Sjekk på https://www.w3schools.com/colors/colors_converter.asp viser at fargen 
+            likner veldig på brikkenes farge...  
+            */
             color: #fff;
             border: 6px solid #2c3e50;
             border-radius: 10px;
             display: grid;
-            grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+            /*'Fr' - fracional unit. Skrivet utførlig for bdre forståelse:  */
+            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr);
         }
         
         .celle {
@@ -98,8 +105,9 @@
 
 <body>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
-    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms, se kommentar ovenfor-->
+    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
+    <!-- https://www.w3schools.com/css/css_grid.asp -->
     <section id="gamearea">
         <div id="celle0" class="celle"></div>
         <div id="celle1" class="celle"></div>
@@ -110,6 +118,8 @@
         <div id="celle6" class="celle"></div>
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
+        
+
     </section>
     <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
@@ -119,7 +129,7 @@
         var playermark = "X";
 
         // Her tror jeg er kommentaren lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen. 
-        // Kommentaren i den opprinnelige filen lyder: 
+        // Kommentaren i den opprinnelige filen: 
         // 'Dette skriver vi ut i <span>-tagene med id-ene "player" og "playermark" i <div>-tagen med id "playerturn".'
 
         document.getElementById("player").innerHTML = player;
@@ -222,7 +232,7 @@
 
                 const delayChangePlayers = setTimeout(changePlayers, 1000);
 
-            //Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
+            // Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
                 return;
             }
@@ -231,12 +241,12 @@
 
         function sjekkVinner() {
             var rundenVunnet = false;
-            //Vi må sjekke etter vinner for hver brikke som plasseres på brettet.
+            // Vi må sjekke etter vinner for hver brikke som plasseres på brettet.
             // Eksempel: combination 1 gir KomboPlass 3, 4 og 5. Vi sjekker i arrayen som vi har befolket ovenfor. Hvis 3, 4 og 5 alle 
             // alle er "X" (var brikke 1, 2 og 3 er "X"), settes variablen rundenVunnet til true. 
             for(var combination = 0; combination <= 7; combination++) {
-                var vinnerKomboPlass1 = winningCombos[combination][0]; //Henter ut plassering av vinnerkombinasjonens rad 1, eksempel winningCombos[0][0] første runde, som inneholder verdien 0.
-                var vinnerKomboPlass2 = winningCombos[combination][1];
+                var vinnerKomboPlass1 = winningCombos[combination][0]; //Henter ut plassering av vinnerkombinasjonens rad 1, 
+                var vinnerKomboPlass2 = winningCombos[combination][1]; //eksempel winningCombos[0][0] første runde, som inneholder verdien 0.
                 var vinnerKomboPlass3 = winningCombos[combination][2]
 
                 var brikke1 = spillerBrikker[vinnerKomboPlass1]; //Henter ut verdien (spillmerket) på indexen til første vinnerkombinasjonsplass fra spillerBrikker, eksempel spillerBrikker[0] første runde.
@@ -252,6 +262,7 @@
                 if(brikke1 === brikke2 && brikke2 === brikke3) {
                     rundenVunnet = true;
                     break;
+                    
                 }
             }
 
@@ -276,6 +287,20 @@
                 
                 // se kommentar under <style> ovenfor (linje 10) om hvorfor dette ikke fungerer:
                 // document.getElementById("mystyle").style.backgroundColor = "#FFD700"; 
+
+                /*
+                OPPGAVE 4: Spørsmål til ChatGPT
+                1) 'Pls explain this structure: ' .celle '. Why is it called '.celle'. What does ' . ' stand for?'
+                Svar (forkortet): .celle er 'class name' Man kunne ha valgt .box eller andre. .celle er også en selector 
+                (et utvalgsverktøy?).
+                Det er ulike type selectors som class (.celle) og ID (#id)
+                2) 'it seems in my code each celle has two selectors,  .celle and #id.' ? [utdrag fra koden]
+                Svar : Korrekt.
+
+                Her ser jeg at ID også brukes i eksempel på https://www.w3schools.com/jsref/prop_style_color.asp 
+                Jeg forsøker å skrive document.getElementById("celle1").style.color = "FFD700" på ulike plasser i <script>
+                og det fungerer.
+                */
 
                 spillStatus = false;
             }
@@ -314,6 +339,8 @@
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
         }
+
+        
     </script>
 </body>
 
