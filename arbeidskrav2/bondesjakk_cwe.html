@@ -339,6 +339,8 @@
             var celleteller = 0;
             while (celleteller < 9) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
+                // TIL OPPGAVE 4: Her har jeg brukt samme mønster som for å fjerne brikkene: 
+                document.getElementById("celle" + celleteller).style.color = "#fff";
                 celleteller++;
             }
             // 2)
@@ -349,6 +351,7 @@
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
         }
+
 
     </script>
 </body>
