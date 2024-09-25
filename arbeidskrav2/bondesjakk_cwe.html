@@ -160,9 +160,15 @@
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
         
-
+    
     </section>
-    <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>
+    <div>
+        
+    </div>
+    <section id="spilleTeller">Du spiller: ...<span id="antallSpill"></span> av 3 spill.</section>
+    <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
+    av variablen var spillteller = 1 sannsynligvis overskrev tellerverdien hver gang. 
+    <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>  -->
     <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
     <script>
@@ -183,7 +189,7 @@
         document.getElementById("player").innerHTML = player;
         document.getElementById("playermark").innerHTML = playermark;
 
-        var antallSpill = 1;
+        let antallSpill = "";
 
         var winningCombos = [
             [0, 1, 2],
@@ -239,7 +245,14 @@
 
         function spill(celle) {
 
+
+
             if(spillStatus === true) {
+
+                if(antallSpill===""){
+                antallSpill=1;
+                document.getElementById("antallSpill").innerHTML = antallSpill;
+            };
 
                 var cellSpace = document.getElementById("celle"+celle).innerHTML;
                 
@@ -277,7 +290,7 @@
                 hadde vært mer komplisert og krever 3 parametere. (Prompt: 
                 in the above longer code, how can i delay the  function spill(celle) execution?)
                 */
-                const delaySjekkVinner = setTimeout(sjekkVinner, 1000);
+                const delaySjekkVinner = setTimeout(sjekkVinner, 100);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -394,7 +407,6 @@
                 }}
 
         function restartGame() {
-            restartTeller++;
             // 1)
             spillerBrikker = ["","","","","","","","",""];
             var celleteller = 0;
@@ -413,8 +425,8 @@
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
             // 5) Antall spill
                 if(antallSpill <= 2) {
+                antallSpill++;
                 document.getElementById("antallSpill").innerHTML = antallSpill;
-                antallSpill++
                     } else {
                 // if-else er min egen påfunn for ikke å telle i det uendelige. Men jeg måtte spørre ChatGPT hvorfor 
                 // man må klikke 2x for å sette tilbake til null. Forklaringen i mine egne ord: Det var
@@ -422,8 +434,9 @@
                 // Men den andre klikken gjorde at første delen av if else kjørtes igjen (med antallSpill <= 3 sant) 
                 // og document.getElementbyId oppdaterte displayen.
                 // Om man har med document.getElementById linjer endrer på ingen måte spillens logikk. 
+                antallSpill = "";
                 document.getElementById("antallSpill").innerHTML = antallSpill;
-                antallSpill = 0
+                console.log(antallSpill);
                  };
     
         // her slutter restartGame
