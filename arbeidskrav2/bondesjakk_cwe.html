@@ -81,22 +81,6 @@
             justify-content: center;
             align-items: center;
         }
-        /*TIL OPPGAVE 5: En kopi av #newgame: */
-        #spilleTeller {
-            width: 300px;
-            padding: 20px;
-            display: block;
-            margin: 20px auto;
-            background: #6ea100;
-            border: 2px solid #000;
-            border-radius: 5px;
-            color: #000;
-            font-size: 2rem;
-            /*Jeg kunne først ikke se noen tekst, hverken i eller utenfor span. ChatGPT sier det kan skyldes at dette overstyrres
-            (is inherited) men jeg ser heller ikke at visibility brukes andre steder. Det virker å ha løst seg men jeg
-            inkluderer for sikkerhets skyld:*/
-            visibility: visible; 
-        }
 
         #newgame {
             width: 300px;
@@ -135,10 +119,9 @@
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
         
-    </section>
-    <section id="spilleTeller">Antall spill:<span id="antallSpill"></span></section>
-    <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
+    </section>
+    <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
     <script>
         var spillStatus = true;
@@ -223,9 +206,6 @@
                     if(!spillerBrikker.includes("")) {
                         document.getElementById("playerturn").innerHTML = "Uavgjort! Ingen vant...";
                         spillStatus = false;
-                        //Gjør restart spill-knappen synlig. Denne manglet ved uavgjort
-                        // i det opprinnelige filen som hentet fra kursens repository. 
-                        document.getElementById("newgame").style.display = "block";
                     }
                     
                 /* OPPGAVE 3:
@@ -294,7 +274,7 @@
                     Først misforsto jeg oppgavestillingen. Hint viser
                     til 'document.body.style.backgroundColor = "red".' Så jeg skrev:
                     document.body.style.backgroundColor = "#FFD700";
-                    Løsingen nedenfor hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
+                    Dette hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
                     mer målrettet. 
                     Jeg leste oppgavestillingen igjen og ble usikker og spurte ChatGPT hvordan man kan endre
                     'bakgrunnsfargen i <div> med id playerturn'  
@@ -332,7 +312,7 @@
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
             // av spill. Det går likevel ikke å sette change player for seg selv etter sjekkVinner.  
-                setTimeout(changePlayers, 1000);
+                setTimeout(changePlayers, 100);
             };
         // her slutter sjekkVinner:
         }
@@ -370,25 +350,6 @@
             playermark = "X";
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
-            // 5) Antall spill
-            
-            
-            
-            if(antallSpill <= 3) {
-                document.getElementById("antallSpill").innerHTML = antallSpill;
-                antallSpill++
-            } else {
-                // if-else er min egen påfunn for ikke å telle i det uendelige. Men jeg måtte spørre ChatGPT hvorfor 
-                // man må klikke 2x for å sette tilbake til null. Forklaringen i mine egne ord: Det var
-                // egentlig ikke nødvendig å klikke 2 ganger. Variablen var satt tilbake til 0 allerede.
-                // Men den andre klikken gjorde at første delen av if else kjørtes igjen (med antallSpill <= 3 sant) 
-                // og document.getElementbyId oppdaterte displayen.
-                // Om man har med document.getElementById linjer endrer på ingen måte spillens logikk. 
-                document.getElementById("antallSpill").innerHTML = antallSpill;
-                antallSpill = 0;
-            };
-            console.log(antallSpill);
-        // her slutter restartGame
         }
 
 
