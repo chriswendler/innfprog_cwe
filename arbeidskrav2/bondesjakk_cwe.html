@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,6 +73,11 @@
             grid-template-columns: repeat(3, 1fr);
         }
         
+        #buttonAndBox {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
         .celle {
             border: 6px solid #2c3e50;
             border-radius: 2px;
@@ -162,14 +168,14 @@
         
     
     </section>
-    <div>
-        
+    <div id="buttonAndBox">
+        <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>
+        <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
+        av variablen var spillteller = 1 sannsynligvis overskrev tellerverdien hver gang. 
+        <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>  -->
+        <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
     </div>
-    <section id="spilleTeller">Du spiller: ...<span id="antallSpill"></span> av 3 spill.</section>
-    <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
-    av variablen var spillteller = 1 sannsynligvis overskrev tellerverdien hver gang. 
-    <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>  -->
-    <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
+
 
     <script>
         var spillStatus = true;
@@ -409,6 +415,7 @@
         function restartGame() {
             // 1)
             spillerBrikker = ["","","","","","","","",""];
+            document.getElementById("playerturn").style.backgroundColor = "";
             var celleteller = 0;
             while (celleteller < 9) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
