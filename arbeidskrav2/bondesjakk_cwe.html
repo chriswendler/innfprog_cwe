@@ -54,7 +54,11 @@
             padding: 10px;
             border-radius: 5px;   
         }
-        
+        #gameareaAndimage {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
         #gamearea {
             width: 600px;
             height: 600px;
@@ -156,6 +160,7 @@
     <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
     <!-- https://www.w3schools.com/css/css_grid.asp -->
+    
     <section id="gamearea">
         <div id="celle0" class="celle"></div>
         <div id="celle1" class="celle"></div>
@@ -166,9 +171,8 @@
         <div id="celle6" class="celle"></div>
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
-        
-    
     </section>
+    
     <div id="buttonAndBox">
         <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>
         <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
@@ -286,6 +290,9 @@
                         // Dette manglet i den opprinnelige koden fra kursets repository:
                         document.getElementById("newgame").style.display = "inline-block";
                         spillStatus = false;
+                        rundenVunnet = false;
+                        // Dette var nødvendig for å forhindre at changePlayers kjøres:
+                        return;
                     }
                     
                 /* OPPGAVE 3:
@@ -297,7 +304,7 @@
                 hadde vært mer komplisert og krever 3 parametere. (Prompt: 
                 in the above longer code, how can i delay the  function spill(celle) execution?)
                 */
-                setTimeout(sjekkVinner, 1000);
+                
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -305,7 +312,7 @@
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
                 } 
-                
+                setTimeout(sjekkVinner, 100);
                 // TIL OPPGAVE 3: Når spillerens tur er ferdig, er det neste spillers tur. For å hindre at man kan
                 // sette spillmerket mens vi utsetter, har jeg selv kommet på at man kan flytte ut denne prosessen gjennom
                 // en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
@@ -392,7 +399,7 @@
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
             // av spill. Det går likevel ikke å sette change player for seg selv etter sjekkVinner.  
-                setTimeout(changePlayers, 1000);
+                setTimeout(changePlayers, 100);
             };
         // her slutter sjekkVinner:
         }
@@ -414,7 +421,7 @@
                 }}
 
         function restartGame() {
-            rundenVunnet = false;
+            
             document.getElementById("playerturn").style.backgroundColor = "#ccc";
             // 1)
             spillerBrikker = ["","","","","","","","",""];
@@ -448,7 +455,6 @@
                 antallSpill = "";
                 document.getElementById("antallSpill").innerHTML = antallSpill;
                 console.log(antallSpill);
-                
                  };
     
         // her slutter restartGame
