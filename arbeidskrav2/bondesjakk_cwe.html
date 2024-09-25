@@ -115,11 +115,36 @@
             color: white;
             cursor: pointer;
         }
+
+        .language-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        .language-button {
+            margin-left: auto;
+            padding: 10px;
+            font-size: 2rem;
+            background-color: #6ea100;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .language-button:hover {
+            background-color: #364e01; 
+            cursor: pointer;         
+        }
+
     </style>
 
 </head>
 
 <body>
+    <div class="language-container">
+        <button class="language-button" onclick="switchLanguage('no')">&#x1f1f3;&#x1f1f4; Norsk</button>
+        <button class="language-button" onclick="switchLanguage('de')">&#x1F1E9;&#x1F1EA; Deutsch</button> 
+    </div>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
     <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
@@ -144,6 +169,12 @@
         var spillStatus = true;
         var player = 1;
         var playermark = "X";
+        // Dette bare fordi jeg var interessert i å se hvordan man gjør slikt. Språkversjonene 
+        // ligger i en objekt med nøkkel-verdi par hvor no/de er nøkler. Objekten lagres i en variabel.  
+        const playerTurnTranslation = {
+            no: 'Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:',
+            de: 'Spieler <span id="player"></span> (<span id="playermark"></span>) ist dran:',
+        };
 
         // Her tror jeg er kommentaren lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen. 
         // Kommentaren i den opprinnelige filen: 
@@ -166,6 +197,17 @@
         ];
 
         var spillerBrikker = ["","","","","","","","",""];
+
+        // Dette bare fordi jeg var interessert i å se hvordan man gjør slikt:
+        function switchLanguage(lang) {
+            document.getElementById("playerturn").innerHTML = playerTurnTranslation[lang];
+            //const playerTurnSection = document.getElementById("playerturn");
+            //playerTurnSection.innerHTML = playerTurnTranslation[lang];
+     
+                    // Reassign player and playermark values to update in the new language context
+            document.getElementById("player").innerHTML = player;
+            document.getElementById("playermark").innerHTML = playermark;
+             }
 
         document.getElementById("celle0").addEventListener("click", function() {
             spill(0);
@@ -352,6 +394,7 @@
                 }}
 
         function restartGame() {
+            restartTeller++;
             // 1)
             spillerBrikker = ["","","","","","","","",""];
             var celleteller = 0;
@@ -368,7 +411,7 @@
             playermark = "X";
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
-                        // 5) Antall spill
+            // 5) Antall spill
                 if(antallSpill <= 2) {
                 document.getElementById("antallSpill").innerHTML = antallSpill;
                 antallSpill++
