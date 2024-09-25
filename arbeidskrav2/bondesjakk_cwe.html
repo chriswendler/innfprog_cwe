@@ -91,7 +91,7 @@
             border: 2px solid #000;
             border-radius: 5px;
             color: #000;
-            font-size: 2rem;
+            font-size: 1.5rem;
             /*Jeg kunne først ikke se noen tekst, hverken i eller utenfor span. ChatGPT sier det kan skyldes at dette overstyrres
             (is inherited) men jeg ser heller ikke at visibility brukes andre steder. Det virker å ha løst seg men jeg
             inkluderer for sikkerhets skyld:*/
@@ -137,7 +137,7 @@
         
 
     </section>
-    <section id="spilleTeller">Antall spill:<span id="antallSpill"></span></section>
+    <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>
     <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
     <script>
@@ -369,10 +369,7 @@
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
                         // 5) Antall spill
-            
-            
-            
-                 if(antallSpill <= 3) {
+                if(antallSpill <= 2) {
                 document.getElementById("antallSpill").innerHTML = antallSpill;
                 antallSpill++
                     } else {
