@@ -30,12 +30,13 @@
         }
         
         #playerturn {
-            color: #34495e;
+            color: #085fb6;
             font-size: 3em;
             margin: 20px auto;
             max-width: 600px;
             padding: 10px;
             border-radius: 5px;
+            background-color: #ccc;
         }
         /*
         TIL OPPGAVE 3
@@ -283,7 +284,7 @@
                     if(!spillerBrikker.includes("")) {
                         document.getElementById("playerturn").innerHTML = "Uavgjort! Ingen vant...";
                         // Dette manglet i den opprinnelige koden fra kursets repository:
-                        restartGame;
+                        
                         spillStatus = false;
                     }
                     
@@ -413,9 +414,12 @@
                 }}
 
         function restartGame() {
+            rundenVunnet = false;
+            document.getElementById("playerturn").style.backgroundColor = "#ccc";
             // 1)
             spillerBrikker = ["","","","","","","","",""];
-            document.getElementById("playerturn").style.backgroundColor = "";
+            
+            
             var celleteller = 0;
             while (celleteller < 9) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
@@ -444,6 +448,7 @@
                 antallSpill = "";
                 document.getElementById("antallSpill").innerHTML = antallSpill;
                 console.log(antallSpill);
+                
                  };
     
         // her slutter restartGame
