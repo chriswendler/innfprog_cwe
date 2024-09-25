@@ -172,7 +172,7 @@
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
     </section>
-    
+
     <div id="buttonAndBox">
         <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>
         <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
@@ -312,7 +312,7 @@
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
                 } 
-                setTimeout(sjekkVinner, 100);
+                setTimeout(sjekkVinner, 1000);
                 // TIL OPPGAVE 3: Når spillerens tur er ferdig, er det neste spillers tur. For å hindre at man kan
                 // sette spillmerket mens vi utsetter, har jeg selv kommet på at man kan flytte ut denne prosessen gjennom
                 // en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
@@ -395,11 +395,15 @@
                 spillStatus = false;
             } else {
             // else = hvis runden ikke er vunnet
-            // Change player skulle opprinnelig foretas som del av spill-funksjonen. Etter at det ble satt Timeout, førte dette
+            // ChangePlayer skulle opprinnelig foretas som del av spill-funksjonen. Etter at det ble satt Timeout, førte dette
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
-            // av spill. Det går likevel ikke å sette change player for seg selv etter sjekkVinner.  
-                setTimeout(changePlayers, 100);
+            // av spill. 
+            // Det går likevel ikke å sette changePlayer for seg selv etter sjekkVinner. Da fungerer det kun første gang. 
+            // Jeg tror årsaken er at spill utløses hver gang man klikker på en celle, så changePlayers må enten vaere en del av
+            // spill eller en annen funksjon som utløses av denne funksjonen.
+            
+                setTimeout(changePlayers, 1000);
             };
         // her slutter sjekkVinner:
         }
