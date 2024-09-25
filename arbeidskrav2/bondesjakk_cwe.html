@@ -284,7 +284,7 @@
                     if(!spillerBrikker.includes("")) {
                         document.getElementById("playerturn").innerHTML = "Uavgjort! Ingen vant...";
                         // Dette manglet i den opprinnelige koden fra kursets repository:
-                        
+                        document.getElementById("newgame").style.display = "inline-block";
                         spillStatus = false;
                     }
                     
@@ -297,7 +297,7 @@
                 hadde vært mer komplisert og krever 3 parametere. (Prompt: 
                 in the above longer code, how can i delay the  function spill(celle) execution?)
                 */
-                const delaySjekkVinner = setTimeout(sjekkVinner, 100);
+                setTimeout(sjekkVinner, 1000);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -348,7 +348,7 @@
                 //Skriv ut hvilken spiller som har vunnet
                 document.getElementById("playerturn").innerHTML = "Spiller " + player + " har vunnet!";
                 //Gjør restart spill-knappen synlig
-                document.getElementById("newgame").style.display = "block";
+                document.getElementById("newgame").style.display = "inline-block";
 
                 /*  OPPGAVE 2: ENDRE FARGE
                     Først misforsto jeg oppgavestillingen. Hint viser
@@ -392,7 +392,7 @@
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
             // av spill. Det går likevel ikke å sette change player for seg selv etter sjekkVinner.  
-                setTimeout(changePlayers, 100);
+                setTimeout(changePlayers, 1000);
             };
         // her slutter sjekkVinner:
         }
