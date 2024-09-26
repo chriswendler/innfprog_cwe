@@ -43,7 +43,7 @@
         Her måtte jeg høre med ChatGPT om hvordan CSS kunne lenkes til <p>-tagen nedenfor: da tagen ikke inneholder en id
         som playerturn har, kan man ikke bruke #p men skriver bare p. Innholder er i p-CSS er kopiert fra #playerturn, bare 
         skriftstørrelse er endret.
-        Varselet kan sikkert unnlates med 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. Om den behøvs
+        Varselet i tagen (se nedenfor) kan sikkert unnlates ved 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. Om den behøvs
         vil være mer et spørsmål for en produktdesigner enn for utvikleren. 
         */
         p{
@@ -54,20 +54,15 @@
             padding: 10px;
             border-radius: 5px;   
         }
-        #gameareaAndimage {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-        }
 
         #gamearea {
             width: 600px;
             height: 600px;
             margin: 0 auto;
             background-color: #34495e;
-            /* OPPGAVE 4: Jeg tentkte først å finne ut hvorfor spillerBrikker er i utgangspunktet hvitet. Jeg spurte ChatGPT
+            /* OPPGAVE 4: Jeg begynte ved å finne ut hvorfor spillerBrikker er i utgangspunktet hvite. Jeg spurte ChatGPT
             (Why are the playermarks on the tic tac toe board white?) og ble henvist bl.a. til CSS. Ved gjennomlesning 
-            finner jeg denne fargen. Sjekk på https://www.w3schools.com/colors/colors_converter.asp viser at fargen 
-            likner veldig på brikkenes farge...  
+            finner jeg den hvite fargen her. Sjekket på https://www.w3schools.com/colors/colors_converter.asp 
             */
             color: #fff;
             border: 6px solid #2c3e50;
@@ -76,11 +71,6 @@
             /*'Fr' - fracional unit. Skrivet utførlig for bdre forståelse:  */
             grid-template-rows: repeat(3, 1fr);
             grid-template-columns: repeat(3, 1fr);
-        }
-        
-        #buttonAndBox {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
         }
 
         .celle {
@@ -92,7 +82,14 @@
             justify-content: center;
             align-items: center;
         }
-        /*TIL OPPGAVE 5: En kopi av #newgame: */
+
+            /*Dette for å utnytte plassen bedre. Gjort på samme måte som i #gamearea ovenfor*/
+        #buttonAndBox {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /*TIL OPPGAVE 5: En kopi av #newgame med mindre tilpassninger: */
         #spilleTeller {
             width: 300px;
             padding: 20px;
@@ -126,7 +123,9 @@
             color: white;
             cursor: pointer;
         }
-
+        /*Dette er gjort av interesse fordi jeg ønsket å vite hvordan språkversjonene fungerer. Jeg spurte først ChatGPT
+        om hvordan dette gjøres. Deretter tilpasset og forenklet jeg så mye som mulig for å benytte meg av samme type
+        struktur og syntax som er brukt i den opprinnelige koden fra kursets repository:*/
         .language-container {
             position: absolute;
             top: 20px;
@@ -152,12 +151,14 @@
 </head>
 
 <body>
-    <div class="language-container">
+    <!--Brukt samme mønster som nedenfor i gamearea. ChatGPT opplyser at de vises ved siden av hverandre 
+    og ikke under hverandre da button oppfører seg som 'inline block' hvis ikke annet er definert -->
+    <section class="language-container">
         <button class="language-button" onclick="switchLanguage('no')">&#x1f1f3;&#x1f1f4; Norsk</button>
         <button class="language-button" onclick="switchLanguage('de')">&#x1F1E9;&#x1F1EA; Deutsch</button> 
-    </div>
+    </section>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
-    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
+    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 100 ms: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
     <!-- https://www.w3schools.com/css/css_grid.asp -->
     
@@ -174,10 +175,11 @@
     </section>
 
     <div id="buttonAndBox">
-        <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>
+        <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> av 3 spill.</section>
+        
         <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
         av variablen var spillteller = 1 sannsynligvis overskrev tellerverdien hver gang. 
-        <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> spill.</section>  -->
+        <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>  -->
         <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
     </div>
 
@@ -186,8 +188,8 @@
         var spillStatus = true;
         var player = 1;
         var playermark = "X";
-        // Dette bare fordi jeg var interessert i å se hvordan man gjør slikt. Språkversjonene 
-        // ligger i en objekt med nøkkel-verdi par hvor no/de er nøkler. Objekten lagres i en variabel.  
+        // Språkversjonene ligger i en objekt med nøkkel-verdi par hvor no/de er nøkler.
+        // Objekten lagres i en variabel.  
         const playerTurnTranslation = {
             no: 'Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:',
             de: 'Spieler <span id="player"></span> (<span id="playermark"></span>) ist dran:',
@@ -200,7 +202,7 @@
         document.getElementById("player").innerHTML = player;
         document.getElementById("playermark").innerHTML = playermark;
 
-        let antallSpill = "";
+        let antallSpill = 0;
 
         var winningCombos = [
             [0, 1, 2],
@@ -221,11 +223,32 @@
             //const playerTurnSection = document.getElementById("playerturn");
             //playerTurnSection.innerHTML = playerTurnTranslation[lang];
      
-                    // Reassign player and playermark values to update in the new language context
+            // Reassign player and playermark values to update in the new language context
             document.getElementById("player").innerHTML = player;
             document.getElementById("playermark").innerHTML = playermark;
              }
+        
+        // TIL OPPGAVE 5: Etter litt prøving, har jeg landet på a lagre det ut i den egen funksjon. Dette fordi den 
+        // skal kalles i to tilfeller, ved uavgjort og ved vunnet. Se også under restart-funkjsionen, som også endrer telleren. 
+        function telleSpill() {
+            console.log("telleSpill called");
+            if(antallSpill <=2) {
+                antallSpill++;
+            }
+            console.log(antallSpill);    
+        };
+        /*  Dersom man i stedet hadde ønsket å vise "Du spiller X av 3 spill" i spilletelleren, må let antallSpill 
+            deklareres til "" i og telleren settes til 1 ved første knappetrykk (første gang spill-funksjonen kjøres):   
+                if(antallSpill===""){
+                antallSpill=1;
+                document.getElementById("antallSpill").innerHTML = antallSpill;
+                };
+        */  
 
+
+        
+
+        // Det er her vi begynner å spille ved å utløse funksjonen spill:
         document.getElementById("celle0").addEventListener("click", function() {
             spill(0);
         });
@@ -256,27 +279,23 @@
 
         function spill(celle) {
 
-
-
             if(spillStatus === true) {
-
-                if(antallSpill===""){
-                antallSpill=1;
-                document.getElementById("antallSpill").innerHTML = antallSpill;
-            };
-
+              
                 var cellSpace = document.getElementById("celle"+celle).innerHTML;
-                
                 
                 if(cellSpace === "") {
                    
                     if (player === 1) {
-                        //dette skjer i nettleseren:
+                    //dette skjer i nettleseren:
                         document.getElementById("celle"+celle).innerHTML = "X";
-                        //og befolke arrayen som holder kontroll på spillbrettet (kun omformulert for å forstå, ingen endring i koden)
+                    // befolke arrayen som holder kontroll på spillbrettet 
+                    // (kommentaren er kun omformulert for å forstå, koden er uendret her):
                         spillerBrikker[celle] = "X";
-                        // OPPGAVE 3: Dette gjøres for å hindre at en spiller plasserer mens vi utsetter sjekk av vinneren: 
+
+                    // Dette gjør vi for å forhindre at man kan spille mens vi venter på sjekkVinner. Det er changePlayer 
+                    // funksjonen som setter statusen tilbake til "true", se nedenfor:  
                         spillStatus = false;
+
                     } else {
                         document.getElementById("celle"+celle).innerHTML = "O";
                         spillerBrikker[celle] = "O";
@@ -289,39 +308,44 @@
                         document.getElementById("playerturn").innerHTML = "Uavgjort! Ingen vant...";
                         // Dette manglet i den opprinnelige koden fra kursets repository:
                         document.getElementById("newgame").style.display = "inline-block";
+                        
                         spillStatus = false;
                         rundenVunnet = false;
+                        telleSpill();
+                        console.log(antallSpill);
+                        document.getElementById("antallSpill").innerHTML = antallSpill;
                         // Dette var nødvendig for å forhindre at changePlayers kjøres:
                         return;
                     }
                     
                 /* OPPGAVE 3:
-                Her gjorde jeg først en feil og skrev både variablen (const = delay) og
-                deretter funksjonen igjen. Resultatet var at funksjonen kjørtes omiddelbart men 
-                vinner byttet etter delayen. Ettersom det går an å sette spillmerke uansett delayen 
-                (testet med 3000 og 5000 ms), har jeg tatt grep, se nedenfor.
-                ChatGPT foreslo også at det er mulig å bygge inn delayen lengre opp, men dette
-                hadde vært mer komplisert og krever 3 parametere. (Prompt: 
-                in the above longer code, how can i delay the  function spill(celle) execution?)
+                    Vi utsetter sjekkVinner med 1000 ms etter mønster i W3 schools. Da vi gjør dette bare en gang,
+                    og skal heller ikke kansellere, har jeg ikke deklarert en variabel. 
+                    (ChatGPT forklarer: å deklarere en variabel kan hjelpe å skrive til konsolen, tracke i real time eller kansellere
+                    som i eksemple 2 på https://www.w3schools.com/jsref/met_win_settimeout.asp ).
+
+                    For å forhindre at man kan sette spillmerket mens vi utsetter, har jeg selv kommet på at
+                    man kan eksternalisere denne prosessen gjennom
+                    en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
+                    
+                    Først trodde jeg at det var nødvendig med en egen Timeout for changePlayer, men ettersom changePlayer kalles av 
+                    sjekkVinner, inkludert delayen, er ikke dette nødvendig.
                 */
-                
+                setTimeout(sjekkVinner, 100);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
                     // ChatGpt opplyser likevel at "alert" er definert JS. Etterpå finner jeg samme info også under JS Popup Boxes https://www.w3schools.com/js/js_popup.asp   
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
+                // her avsluttes if(cellSpace === "")
                 } 
-                setTimeout(sjekkVinner, 1000);
-                // TIL OPPGAVE 3: Når spillerens tur er ferdig, er det neste spillers tur. For å hindre at man kan
-                // sette spillmerket mens vi utsetter, har jeg selv kommet på at man kan flytte ut denne prosessen gjennom
-                // en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
 
             // Hvis spillstatus er false, avslutter vi funksjonen uten å utføre noen handlinger.
             } else {
                 return;
             }
-        // end of function spill
+        // end of function spill:
         }
 
         function sjekkVinner() {
@@ -352,6 +376,8 @@
 
             //Hvis runden er vunnet, skal vi gjøre noen handlinger:
             if(rundenVunnet === true) {
+                telleSpill();
+                document.getElementById("antallSpill").innerHTML = antallSpill;
                 //Skriv ut hvilken spiller som har vunnet
                 document.getElementById("playerturn").innerHTML = "Spiller " + player + " har vunnet!";
                 //Gjør restart spill-knappen synlig
@@ -360,30 +386,33 @@
                 /*  OPPGAVE 2: ENDRE FARGE
                     Først misforsto jeg oppgavestillingen. Hint viser
                     til 'document.body.style.backgroundColor = "red".' Så jeg skrev:
-                    document.body.style.backgroundColor = "#FFD700";
-                    Løsingen nedenfor hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
-                    mer målrettet. 
+                    document.body.style.backgroundColor = "#FFD700"; som endrer hele bakgrunden. 
+
                     Jeg leste oppgavestillingen igjen og ble usikker og spurte ChatGPT hvordan man kan endre
                     'bakgrunnsfargen i <div> med id playerturn'  
+                    
+                    Løsingen nedenfor hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
+                    mer målrettet. 
                 */
 
                 document.getElementById("playerturn").style.backgroundColor = "#FFD700";
                 
                 // se kommentar under <style> ovenfor (linje 10) om hvorfor dette ikke fungerer:
-                // document.getElementById("mystyle").style.backgroundColor = "#FFD700"; 
+                // " document.getElementById("mystyle").style.backgroundColor = "#FFD700"; "  
 
                 /*
                 OPPGAVE 4: Spørsmål til ChatGPT
                 1) 'Pls explain this structure: ' .celle '. Why is it called '.celle'. What does ' . ' stand for?'
-                Svar (forkortet): .celle er 'class name' Man kunne ha valgt .box eller andre. .celle er også en selector 
-                (et utvalgsverktøy?).
-                Det er ulike type selectors som class (.celle) og ID (#id)
+                Svar (forkortet): .celle er 'class name' Man kunne ha valgt .box eller andre navn. " .celle " er også en selektor 
+                (et utvalgsverktøy).
+                Det er ulike type selectors som f.eks. class (.celle) og ID (#id)
                 2) 'it seems in my code each celle has two selectors,  .celle and #id.' ? [utdrag fra koden]
                 Svar : Korrekt.
 
                 Her ser jeg at ID også brukes i eksempel på https://www.w3schools.com/jsref/prop_style_color.asp 
-                Jeg forsøker å skrive document.getElementById("celle1").style.color = "FFD700" på ulike plasser i <script>
+                Jeg forsøker å skrive " document.getElementById("celle1").style.color = "FFD700" " på ulike plasser i <script>
                 og det fungerer.
+                Logikken (egen tenkning):
                 vinnerKomboPlass1 viser til et tallverdi som tilsvarer den cellen i arrayen som inneholder brikken i vinnerkombinasjon.
                 EksempleL: vinnerkombinasjon er cellene 3,4 og 5. Da er vinnerKomboPlass1 = winningCombos[1][0] som er 3. 
                 */
@@ -400,15 +429,15 @@
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
             // av spill. 
             // Det går likevel ikke å sette changePlayer for seg selv etter sjekkVinner. Da fungerer det kun første gang. 
-            // Jeg tror årsaken er at spill utløses hver gang man klikker på en celle, så changePlayers må enten vaere en del av
-            // spill eller en annen funksjon som utløses av denne funksjonen.
-            
-                setTimeout(changePlayers, 1000);
+            // Jeg tror årsaken er at spill-funksjonen utløses hver gang man klikker på en celle, så changePlayers må enten vaere 
+            // en del av spill eller en annen funksjon som utløses av denne funksjonen.
+                
+               changePlayers();
             };
-        // her slutter sjekkVinner:
-        }
 
-        // TIL OPPGAVE 3; Vi skal forhindre at man kan sette brikker og at teksten endres mens vi venter på sjekkVinner: 
+        // her slutter sjekkVinner {}:
+        }
+        
         function changePlayers() {
         if (player === 1) {
                     player = 2;
@@ -425,7 +454,32 @@
                 }}
 
         function restartGame() {
+            /* TIL OPPGAVE 5: Etter maks antall spill, skal omstart føre til reset. Det hadde vært mulig å
+             telleSpill-funkjsonen utløse omstart, men jeg tror hvis man først viser en knapp for omstart/på nytt,
+             så forventer brukeren å beholde kontrollen. 
+
+             Jeg hadde først glemt linjen med document.getElementById og ba ChatGPT om hjelp til debugging. Jeg fikk denne
+             veiledning som jeg brukte før jeg oppdaget feilens natur:
             
+            function restartGame() {
+             console.log("antallSpill before checking condition: ", antallSpill);
+                if (antallSpill === 3) {
+                 console.log("Condition passed: Resetting antallSpill");
+                 antallSpill = 0;
+                    } else {
+                       console.log("Condition failed: antallSpill is not 3");
+                    }
+                     console.log("antallSpill after condition: ", antallSpill);
+                    }
+            */
+
+            if(antallSpill===3) {
+                antallSpill = 0
+            } 
+            document.getElementById("antallSpill").innerHTML = antallSpill;
+      
+            // TIL OPPGAVE 2: Vi setter fargen av playerturn-section tilbake. For at det fungerer, måtte jeg tilføye  
+            // en bakgrundsfare i CSS-blocken ovenfor:
             document.getElementById("playerturn").style.backgroundColor = "#ccc";
             // 1)
             spillerBrikker = ["","","","","","","","",""];
@@ -434,35 +488,25 @@
             var celleteller = 0;
             while (celleteller < 9) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
-                // TIL OPPGAVE 4: Her har jeg brukt samme mønster som for å fjerne brikkene: 
+
+                // TIL OPPGAVE 4: tilbakestill farge - Her har jeg brukt samme mønster som for å fjerne brikkene selv: 
                 document.getElementById("celle" + celleteller).style.color = "#fff";
                 celleteller++;
             }
-            // 2)
+            
             spillStatus = true;
-            // 3)
+            
             player = 1;
             playermark = "X";
-            // 4)
+            
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
-            // 5) Antall spill
-                if(antallSpill <= 2) {
-                antallSpill++;
-                document.getElementById("antallSpill").innerHTML = antallSpill;
-                    } else {
-                // if-else er min egen påfunn for ikke å telle i det uendelige. Men jeg måtte spørre ChatGPT hvorfor 
-                // man må klikke 2x for å sette tilbake til null. Forklaringen i mine egne ord: Det var
-                // egentlig ikke nødvendig å klikke 2 ganger. Variablen var satt tilbake til 0 allerede.
-                // Men den andre klikken gjorde at første delen av if else kjørtes igjen (med antallSpill <= 3 sant) 
-                // og document.getElementbyId oppdaterte displayen.
-                // Om man har med document.getElementById linjer endrer på ingen måte spillens logikk. 
-                antallSpill = "";
-                document.getElementById("antallSpill").innerHTML = antallSpill;
-                console.log(antallSpill);
-                 };
+
+            // her slutter restartGame
+         };
+                 
     
-        // her slutter restartGame
-        }
+        
+        
 
 
 
