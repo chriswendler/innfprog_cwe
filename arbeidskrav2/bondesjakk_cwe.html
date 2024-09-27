@@ -70,9 +70,9 @@
             border: 6px solid #2c3e50;
             border-radius: 10px;
             display: grid;
-            /*'Fr' - fracional unit. Skrivet utførlig for bdre forståelse:  */
-            grid-template-rows: repeat(3, 1fr);
-            grid-template-columns: repeat(3, 1fr);
+            /* TIL OPPGAVE 6: 'Fr' - fracional unit. Skrivet utførlig for bdre forståelse:  */
+            grid-template-rows: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .celle {
@@ -173,6 +173,14 @@
         <div id="celle6" class="celle"></div>
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
+    <!--TIL OPPGAVE 6: -->
+        <div id="celle9" class="celle"></div>
+        <div id="celle10" class="celle"></div>
+        <div id="celle11" class="celle"></div>
+        <div id="celle12" class="celle"></div>
+        <div id="celle13" class="celle"></div>
+        <div id="celle14" class="celle"></div>
+        <div id="celle15" class="celle"></div>
     </section>
 
      <!-- https://www.w3schools.com/css/css_grid.asp er brukt for: -->
@@ -204,19 +212,26 @@
         document.getElementById("playermark").innerHTML = playermark;
 
         let antallSpill = 0;
-
+//TIL OPPGAVE 6:
         var winningCombos = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
+        // Horisontale (rader)
+        [0, 1, 2, 3],   // Rad 1
+        [4, 5, 6, 7],   
+        [8, 9, 10, 11], 
+        [12, 13, 14, 15],
+
+        // Vertikale (kolonner)
+        [0, 4, 8, 12],  
+        [1, 5, 9, 13],  
+        [2, 6, 10, 14], 
+        [3, 7, 11, 15],
+
+        // Diagonale
+        [0, 5, 10, 15], 
+        [3, 6, 9, 12] 
         ];
 
-        var spillerBrikker = ["","","","","","","","",""];
+        var spillerBrikker = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
 
         // Ved klick så kalles funksjonen hvor språket som ønskes sendes inn som parameter:
         function switchLanguage(lang) {
@@ -249,35 +264,17 @@
 
         
 
-        // Det er her vi begynner å spille ved å utløse funksjonen spill:
-        document.getElementById("celle0").addEventListener("click", function() {
-            spill(0);
+        // Det er her vi begynner å spille ved trykke på en rute og dermed også utløse funksjonen spill:
+        // Da jeg ba ChatGPT å forlengre listen med eventlisteners som aktiveres når man klikker på de respektive
+        // cellene, foreslås en for-løkke. Mens løkken kjører, knyttes EventListener til cellene, en om gangen. 
+        // I `celle${celleTeller}` er " celle " en string mens ${} innføyer den aktuelle verdien (konkatinering). 
+        for(let celleEventTeller = 0; celleEventTeller <= 15; celleEventTeller++) {
+            document.getElementById(`celle${celleEventTeller}`).addEventListener("click", function() {
+            spill(celleEventTeller);
         });
-        document.getElementById("celle1").addEventListener("click", function() {
-            spill(1);
-        });
-        document.getElementById("celle2").addEventListener("click", function() {
-            spill(2);
-        });
-        document.getElementById("celle3").addEventListener("click", function() {
-            spill(3);
-        });
-        document.getElementById("celle4").addEventListener("click", function() {
-            spill(4);
-        });
-        document.getElementById("celle5").addEventListener("click", function() {
-            spill(5);
-        });
-        document.getElementById("celle6").addEventListener("click", function() {
-            spill(6);
-        });
-        document.getElementById("celle7").addEventListener("click", function() {
-            spill(7);
-        });
-        document.getElementById("celle8").addEventListener("click", function() {
-            spill(8);
-        });
+        }
 
+        // Funkjsonen bli kallt og celleverdien tilvarende rute som er trykket på blir sendt inn som parameter:
         function spill(celle) {
 
             if(spillStatus === true) {
@@ -336,7 +333,8 @@
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
-                    // ChatGpt opplyser likevel at "alert" er definert JS. Etterpå finner jeg samme info også under JS Popup Boxes https://www.w3schools.com/js/js_popup.asp   
+                    // ChatGpt opplyser likevel at "alert" er forhånsdefinert JS. Fra https://www.w3schools.com/jsref/obj_window.asp 
+                    // framgår at alert er en metode. Den står i samme liste med WindowObjects som Set(Timeout).    
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
                 // her avsluttes if(cellSpace === "")
@@ -352,36 +350,41 @@
         function sjekkVinner() {
             var rundenVunnet = false;
             // Vi må sjekke etter vinner for hver brikke som plasseres på brettet.
-            // Eksempel: combination 1 gir KomboPlass 3, 4 og 5. Vi sjekker i arrayen som vi har befolket ovenfor. Hvis 3, 4 og 5 alle 
-            // alle er "X" (var brikke 1, 2 og 3 er "X"), settes variablen rundenVunnet til true. 
-            for(var combination = 0; combination <= 7; combination++) {
-                var vinnerKomboPlass1 = winningCombos[combination][0]; //Henter ut plassering av vinnerkombinasjonens rad 1, 
-                var vinnerKomboPlass2 = winningCombos[combination][1]; //eksempel winningCombos[0][0] første runde, som inneholder verdien 0.
-                var vinnerKomboPlass3 = winningCombos[combination][2]
+            // Eksempel (3x3): combination 1 gir KomboPlass 3, 4 og 5. Vi sjekker i arrayen som vi har befolket ovenfor. Hvis 3, 4 og 5 alle 
+            // alle er "X" (var brikke 1, 2 og 3 = "X"), settes variablen rundenVunnet til true. 
+            // TIL OPPGAVE 6: Ved 4x4 er det 8 vinnerkombinasjoner med 4 brikker hver.
+            for(var combination = 0; combination <= 8; combination++) {
+                var vinnerKomboPlass1 = winningCombos[combination][0]; // ved combination 1 er KomboPlass1 = 3. 
+                var vinnerKomboPlass2 = winningCombos[combination][1]; // ved combination 1 er KomboPlass2 = 4, osv. 
+                var vinnerKomboPlass3 = winningCombos[combination][2]; // 
+                var vinnerKomboPlass4 = winningCombos[combination][3];
 
                 var brikke1 = spillerBrikker[vinnerKomboPlass1]; //Henter ut verdien (spillmerket) på indexen til første vinnerkombinasjonsplass fra spillerBrikker, eksempel spillerBrikker[0] første runde.
                 var brikke2 = spillerBrikker[vinnerKomboPlass2];
                 var brikke3 = spillerBrikker[vinnerKomboPlass3];
+                var brikke4 = spillerBrikker[vinnerKomboPlass4];
 
                 // Her kunne man har brukt if-else men det hadde vært unnødvendig komplisert. 'Continue' betyr: Hvis en plass er
                 // ledig, trenger vi ikke sjekke for en vinner-kombinasjon i denne runden av løkken. 
-                if(brikke1 === "" || brikke2 === "" || brikke3 === "") {
-                    continue;
+                    if(brikke1 === "" || brikke2 === "" || brikke3 === "" || brikke4 === "") {
+                        continue;
+                    }
+                    //Break: Avbryter løkken 
+                    if(brikke1 === brikke2 && brikke2 === brikke3 && brikke3 === brikke4) {
+                        rundenVunnet = true;
+                        break;      
+                    }
                 }
-                //Break: Avbryter løkken 
-                if(brikke1 === brikke2 && brikke2 === brikke3) {
-                    rundenVunnet = true;
-                    break;      
-                }
-            }
 
             //Hvis runden er vunnet, skal vi gjøre noen handlinger:
             if(rundenVunnet === true) {
+                // TIL OPPGAVE 5:
                 telleSpill();
                 document.getElementById("antallSpill").innerHTML = antallSpill;
-                //Skriv ut hvilken spiller som har vunnet
+
+                
                 document.getElementById("playerturn").innerHTML = "Spiller " + player + " har vunnet!";
-                //Gjør restart spill-knappen synlig
+                
                 document.getElementById("newgame").style.display = "inline-block";
 
                 /*  OPPGAVE 2: ENDRE FARGE
@@ -421,10 +424,12 @@
                 document.getElementById("celle" + vinnerKomboPlass1).style.color = "#FFD700";
                 document.getElementById("celle" + vinnerKomboPlass2).style.color = "#FFD700";
                 document.getElementById("celle" + vinnerKomboPlass3).style.color = "#FFD700";
+                document.getElementById("celle" + vinnerKomboPlass4).style.color = "#FFD700";
 
                 spillStatus = false;
             } else {
             // else = hvis runden ikke er vunnet
+            
             // ChangePlayer skulle opprinnelig foretas som del av spill-funksjonen. Etter at det ble satt Timeout, førte dette
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
@@ -458,11 +463,11 @@
 
         function restartGame() {
             /* TIL OPPGAVE 5: Etter maks antall spill, skal omstart føre til reset. Det hadde vært mulig å
-             telleSpill-funkjsonen utløse omstart, men jeg tror hvis man først viser en knapp for omstart/på nytt,
-             så forventer brukeren å beholde kontrollen. 
+               la telleSpill-funkjsonen utløse omstart, men jeg tror hvis man først viser en knapp for omstart/på nytt,
+               så forventer brukeren å beholde kontrollen. 
 
-             Jeg hadde først glemt linjen med document.getElementById og ba ChatGPT om hjelp til debugging. Jeg fikk denne
-             veiledning som jeg brukte før jeg oppdaget feilens natur:
+               Jeg hadde først glemt linjen med document.getElementById og ba ChatGPT om hjelp til debugging. Jeg fikk denne
+               veiledning som jeg brukte før jeg oppdaget feilens natur:
             
             function restartGame() {
              console.log("antallSpill before checking condition: ", antallSpill);
@@ -474,8 +479,8 @@
                     }
                      console.log("antallSpill after condition: ", antallSpill);
                     }
+            Maksgrense med 3 spill er vilkårlig valgt:
             */
-
             if(antallSpill===3) {
                 antallSpill = 0
             } 
@@ -484,15 +489,14 @@
             // TIL OPPGAVE 2: Vi setter fargen av playerturn-section tilbake. For at det fungerer, måtte jeg tilføye  
             // en bakgrundsfare i CSS-blocken ovenfor:
             document.getElementById("playerturn").style.backgroundColor = "#ccc";
-            // 1)
-            spillerBrikker = ["","","","","","","","",""];
             
+            spillerBrikker = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
             
             var celleteller = 0;
-            while (celleteller < 9) {
+            while (celleteller < 16) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
 
-                // TIL OPPGAVE 4: tilbakestill farge - Her har jeg brukt samme mønster som for å fjerne brikkene selv: 
+                // TIL OPPGAVE 4: tilbakestill farge - Her har jeg brukt samme mønster som for å fjerne selve brikkene: 
                 document.getElementById("celle" + celleteller).style.color = "#fff";
                 celleteller++;
             }
@@ -504,7 +508,7 @@
             
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
 
-            // her slutter restartGame
+        // her slutter restartGame
          };
                  
     
