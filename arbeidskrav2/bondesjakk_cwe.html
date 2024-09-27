@@ -38,13 +38,15 @@
             border-radius: 5px;
             background-color: #ccc;
         }
+
         /*
         TIL OPPGAVE 3
-        Her måtte jeg høre med ChatGPT om hvordan CSS kunne lenkes til <p>-tagen nedenfor: da tagen ikke inneholder en id
-        som playerturn har, kan man ikke bruke #p men skriver bare p. Innholder er i p-CSS er kopiert fra #playerturn, bare 
+        Vi varsler brukerne om 1 sekunde ventetid. 
+        Her måtte jeg høre med ChatGPT om hvordan CSS kunne lenkes til <p>-tagen nedenfor: da denne p-tagen ikke inneholder en id
+        som playerturn (ovenfor) har, kan man ikke bruke #p men skriver bare "p". Innholdet i p-CSS er kopiert fra #playerturn, bare 
         skriftstørrelse er endret.
-        Varselet i tagen (se nedenfor) kan sikkert unnlates ved 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. Om den behøvs
-        vil være mer et spørsmål for en produktdesigner enn for utvikleren. 
+        Varselet i tagen (se nedenfor) kan sikkert unnlates ved 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. 
+        Om denne informasjon behøvs vil være mer et spørsmål for en produktdesigner enn for utvikleren: 
         */
         p{
             color: #34495e;
@@ -83,7 +85,7 @@
             align-items: center;
         }
 
-            /*Dette for å utnytte plassen bedre. Gjort på samme måte som i #gamearea ovenfor*/
+            /*Ved siden av hverandre for å utnytte plassen bedre. Gjort på samme måte som i #gamearea ovenfor*/
         #buttonAndBox {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -123,8 +125,8 @@
             color: white;
             cursor: pointer;
         }
-        /*Dette er gjort av interesse fordi jeg ønsket å vite hvordan språkversjonene fungerer. Jeg spurte først ChatGPT
-        om hvordan dette gjøres. Deretter tilpasset og forenklet jeg så mye som mulig for å benytte meg av samme type
+        /*Dette er gjort av interesse fordi jeg ønsket å vite hvordan sider med språkversjoner fungerer. Jeg spurte først ChatGPT
+        om hvordan dette gjøres. Deretter tilpasset og forenklet jeg oppskriften så mye som mulig for å benytte meg av samme type
         struktur og syntax som er brukt i den opprinnelige koden fra kursets repository:*/
         .language-container {
             position: absolute;
@@ -158,9 +160,8 @@
         <button class="language-button" onclick="switchLanguage('de')">&#x1F1E9;&#x1F1EA; Deutsch</button> 
     </section>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
-    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 100 ms: -->
+    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
-    <!-- https://www.w3schools.com/css/css_grid.asp -->
     
     <section id="gamearea">
         <div id="celle0" class="celle"></div>
@@ -174,12 +175,11 @@
         <div id="celle8" class="celle"></div>
     </section>
 
+     <!-- https://www.w3schools.com/css/css_grid.asp er brukt for: -->
     <div id="buttonAndBox">
         <section id="spilleTeller">Du har spilt: <span id="antallSpill"> 0</span> av 3 spill.</section>
-        
-        <!--Tidligere versjon basert på at man bare teller ferdige spill. Dette var nødvendig da den første deklarasjon
-        av variablen var spillteller = 1 sannsynligvis overskrev tellerverdien hver gang. 
-        <section id="spilleTeller">Du spiller: <span id="antallSpill">...</span> av 3 spill.</section>  -->
+        <!--Alternativ versjon : 
+        <section id="spilleTeller">Du spiller nå: <span id="antallSpill">...</span> av 3 spill.</section>  -->
         <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
     </div>
 
@@ -188,6 +188,7 @@
         var spillStatus = true;
         var player = 1;
         var playermark = "X";
+
         // Språkversjonene ligger i en objekt med nøkkel-verdi par hvor no/de er nøkler.
         // Objekten lagres i en variabel.  
         const playerTurnTranslation = {
@@ -217,13 +218,13 @@
 
         var spillerBrikker = ["","","","","","","","",""];
 
-        // Dette bare fordi jeg var interessert i å se hvordan man gjør slikt:
+        // Ved klick så kalles funksjonen hvor språket som ønskes sendes inn som parameter:
         function switchLanguage(lang) {
+        // Vi setter innholdet i playerturn til innholdet i objektet med de to versjoner. 
+        // Klicker du på det norske flagget er lang = no
             document.getElementById("playerturn").innerHTML = playerTurnTranslation[lang];
-            //const playerTurnSection = document.getElementById("playerturn");
-            //playerTurnSection.innerHTML = playerTurnTranslation[lang];
      
-            // Reassign player and playermark values to update in the new language context
+        // Reassign player and playermark values to update in the new language context
             document.getElementById("player").innerHTML = player;
             document.getElementById("playermark").innerHTML = playermark;
              }
@@ -331,7 +332,7 @@
                     Først trodde jeg at det var nødvendig med en egen Timeout for changePlayer, men ettersom changePlayer kalles av 
                     sjekkVinner, inkludert delayen, er ikke dette nødvendig.
                 */
-                setTimeout(sjekkVinner, 100);
+                setTimeout(sjekkVinner, 1000);
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
@@ -428,9 +429,11 @@
             // likevel til en feil (uncaught reference 0 ved player i restart Game), som ChatGPT mente kunne skyldes 'scope-related 
             // errors', altså funkjsoner og variabler som defineres innen andre funksjoner. Jeg har løst det ved å ta ut changePlayers
             // av spill. 
-            // Det går likevel ikke å sette changePlayer for seg selv etter sjekkVinner. Da fungerer det kun første gang. 
+            // Det går likevel ikke å sette changePlayer for seg selv etter sjekkVinner. Da fungerer det kun første gang koden kjøres. 
             // Jeg tror årsaken er at spill-funksjonen utløses hver gang man klikker på en celle, så changePlayers må enten vaere 
             // en del av spill eller en annen funksjon som utløses av denne funksjonen.
+            // Opprinnelig trodde jeg at changePlayers også behøver 1000ms timeout. Men ettersom den bare utløses når
+            // sjekkVinner kjøres (som selv venter på timeouten sin), er det unødvendig. 
                 
                changePlayers();
             };
