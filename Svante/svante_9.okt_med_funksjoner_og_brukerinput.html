@@ -6,36 +6,42 @@
     <title>Poengberegning</title>
 </head>
 <body>
-    <p id="utskrift"></p>
+  <h2>Registret resultat</h2>
+    <p id="utskrift"></p> 
+    <p>
+        <label for="del1">Deleksamen1</label>
+        <input type="number" id="del1">
+    </p>
+
+    <p>
+        <label for="del2">Deleksamen2</label>
+        <input type="number" id="del2">
+    </p>
+
+    <p>
+        <label for="del3">Deleksamen3</label>
+        <input type="number" id="del3">
+    </p>
+
+    <p>
+        <label for="del4">Deleksamen4</label>
+        <input type="number" id="del4">
+    </p>
+    <!--OBS: Verdien number sier kun noe om grensesnitt i HTML, verdien til JS er tekst/string. 
+    Note: The 'number' type only defines the interface in HTML, but the value in JavaScript is still text/string."-->
+    <p><button id="registrer">Registrer resultater</button></p> 
 
     <script>
         // Gjøre klar noen variabler som vi trenger
         // Svantes poeng på deleksamene
-        var poeng = [79, 82, 71, 84];  // poeng[0], var index = 0; poeng[index]
+        var poeng = [];  // poeng[0], var index = 0; poeng[index]
         // Teller for antall deleksamner som er bestaatt 
         var antallBestaatt = 0;
         // Teller for totalt antall poeng
         var totalePoeng = 0; 
 
-        // Vi skal lage en løkke som går gjennom hver enkelt verdi i arrayen poeng. 
-        // For hver runde løkken går, må vi
-        // - sjekke om deleksamen er bestått (poeng må være like eller høyere enn 40)
-        // - hvis deleksamen er bestått, skal telleren antallBestaatt plusses på med 1  
-        // - plusse poengen (verdiene fra arrayen) på totaePoeng
-
-        for(var index = 0; index < poeng.length; index++){
-            if(poeng[index] >= 40){
-                antallBestaatt++;
-            }
-            totalePoeng = totalePoeng + poeng[index];  // f.eks.: i første runde plusses 72 som er antall på index 0
-            
-            console.log("Løkken kjører nå runde nummer " + index + ". Så langt er " + antallBestaatt + " deleksamer bestått.");
-            console.log("Så langt er total antall poeng " + totalePoeng);
-            // Sammenlignet med v1 har vi dynamikken på plass for å endre antall deleskamen. Det er også med færre linjer.
-        }
-
         // Vi skal lage en datastruktur for karakterskalaen, datastrukturen blir satt opp til kode
-            var karakterSkala = [
+        var karakterSkala = [
                 {karakter: "A", maxscore: 400, minscore: 361}, 
                 {karakter: "B", maxscore: 360, minscore: 321},
                 {karakter: "C", maxscore: 320, minscore: 241},
@@ -47,10 +53,51 @@
         // Eksempel på referanse: karakterSkala[2]["karakter"] -> "C"
         // Eksempel på referanse med variabel: var index = 1, karakterSkala[index]["karakter"] -> "B"
 
-        // Deklarere en variabel som kan ta imot Svantes karakter:
-        var karakter
 
-        // Vi må også sjekke, om alle deleksamene er bestått. Ellers skal karakter blir F, og kurset ikke bestått. 
+        // Lage en funksjon som:
+        // henter verdiene fra deleksamen feltene
+        // og sette dem inn i arrayen
+        function lagreResultater() {
+                for(var teller = 1; teller < 5; teller++) {
+
+                    poeng.push(Number(document.getElementById("del"+teller).value)); 
+                    
+                } console.log(poeng);
+                //var delEks[i] = document.getElementById(`"del${[i]}"`).value;
+                //var delEks1 = document.getElementById("del1").value;
+                karakterUtregning();
+         }
+
+        // 1. steg: sjekk om brukeren har trykket på knappen
+        document.getElementById("registrer").addEventListener("click", lagreResultater)
+
+
+        function karakterUtregning(){
+            // console.log(poeng);
+            // console.log(karakterSkala);
+
+            for(var index = 0; index < poeng.length; index++){
+            if(poeng[index] >= 40) {
+                antallBestaatt++;
+            } 
+            
+            totalePoeng = totalePoeng + poeng[index]; 
+
+            // Det hadde også vært mulig å konverte fra string til tall her, men vi gjør det ved første andledning ovenfor:      
+            totalePoeng = totalePoeng + Number(poeng[index]);  
+            
+            // console.log("Løkken kjører nå runde nummer " + index + ". Så langt er " + antallBestaatt + " deleksamer bestått.");
+            // console.log("Så langt er total antall poeng " + totalePoeng);
+            // Sammenlignet med v1 har vi dynamikken på plass for å endre antall deleskamen. Det er også med færre linjer.
+
+            } // end of for() antall Bestaatt og totalePoeng
+            console.log(antallBestaatt);
+            console.log(totalePoeng);
+
+            // Deklarere en variabel som kan ta imot karakter. Plasseringen sikrer at den bare brukes av den aktuelle funksjonen.
+            var karakter
+
+                    // Vi må også sjekke, om alle deleksamene er bestått. Ellers skal karakter blir F, og kurset ikke bestått. 
         if(antallBestaatt == poeng.length){
             // Vi skal lage en løkke som skal gå gjennom hver karakter i skalalen
             // For hver karakter, må vi sjekke om Svantes poengsum er mellom maxscore og minscore
@@ -63,9 +110,21 @@
         } else { 
                 // Hvis ikke allle deleksamer er bestaatt, settes karakter F uavhengig av poengsum. 
                 karakter = "F";
-            }
+            } // end if else antallBestaatt = poeng.length
+
+                   // utskrift av karakter, en del av utregningsfunksjonen (skal kjøres hver gang):
+        document.getElementById("utskrift").innerHTML = "Karakter: " + karakter 
+
+        } // end of karakterUtregning
+
+
+
+
+
+
+
         
-        document.getElementById("utskrift").innerHTML = "Karakter: " + karakter  
+  
             
 </script>
 
