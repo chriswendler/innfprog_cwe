@@ -18,6 +18,8 @@
     ChatGPT fortalte meg også at  "//" for å kommentere ut kun fungerer i JavaScript, ikke i HTML hvor den her metoden i stedet  
     -->
     <style>
+        /*Body velger hele sidens <body>, endrer man farger her, endres hele bakgrunden (altså alt som ikke er 
+          definert et annet sted*/
         body {
             background: #ccc;
             font-family: Helvetica;
@@ -42,11 +44,11 @@
         /*
         TIL OPPGAVE 3
         Vi varsler brukerne om 1 sekunde ventetid. 
+        Varselet i tagen (se nedenfor) kan sikkert unnlates ved 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. 
+        Om denne informasjon behøvs vil være mer et spørsmål for en produktdesigner enn for utvikleren: 
         Her måtte jeg høre med ChatGPT om hvordan CSS kunne lenkes til <p>-tagen nedenfor: da denne p-tagen ikke inneholder en id
         som playerturn (ovenfor) har, kan man ikke bruke #p men skriver bare "p". Innholdet i p-CSS er kopiert fra #playerturn, bare 
         skriftstørrelse er endret.
-        Varselet i tagen (se nedenfor) kan sikkert unnlates ved 1 sekund forinskelse. Den er et produkt av testing med 3000 og 5000 ms. 
-        Om denne informasjon behøvs vil være mer et spørsmål for en produktdesigner enn for utvikleren: 
         */
         p{
             color: #34495e;
@@ -160,7 +162,7 @@
         <button class="language-button" onclick="switchLanguage('de')">&#x1F1E9;&#x1F1EA; Deutsch</button> 
     </section>
     <section id="playerturn">Spiller <span id="player"></span> (<span id="playermark"></span>) sin tur:</section>
-    <!-- TIL OPPGAVE 3: Dette varselet er et produkt av tetsing med lengre enn 1000 ms: -->
+    <!-- TIL OPPGAVE 3: For brukerens: -->
     <p>(Du må vente 1 sekund mens vi sjekker om du har vunnet.)</p>
     
     <section id="gamearea">
@@ -181,6 +183,13 @@
         <div id="celle13" class="celle"></div>
         <div id="celle14" class="celle"></div>
         <div id="celle15" class="celle"></div>
+        <!--              Spørsmål til ChatGPT
+                1) 'Pls explain this structure: ' .celle '. Why is it called '.celle'. What does ' . ' stand for?'
+                Svar (forkortet): .celle er 'class name' Man kunne ha valgt .box eller andre navn. " .celle " er også en selektor 
+                (et utvalgsverktøy).
+                Det er ulike type selectors som f.eks. class (.celle) og ID (#id)
+                2) 'it seems in my code each celle has two selectors,  .celle and #id.' ? [utdrag fra koden]
+                Svar : Korrekt.-->
     </section>
 
      <!-- https://www.w3schools.com/css/css_grid.asp er brukt for: -->
@@ -204,7 +213,7 @@
             de: 'Spieler <span id="player"></span> (<span id="playermark"></span>) ist dran:',
         };
 
-        // Her tror jeg er kommentaren lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen. 
+        // Følgende kommentaren er kanskje lite upresis ettersom "playerturn" er del av <section>- og ikke av <div>-tagen. 
         // Kommentaren i den opprinnelige filen: 
         // 'Dette skriver vi ut i <span>-tagene med id-ene "player" og "playermark" i <div>-tagen med id "playerturn".'
 
@@ -231,15 +240,19 @@
         [3, 6, 9, 12] 
         ];
 
-        var spillerBrikker = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+        // Fordi det ble repetitiv og man gjør feil, spurte jeg ChatGPT om alternativet:
+        // Array(16) definerer hvor mange ledige plasser det skal finnes (4x4), mens fill("") angir de tomme verdiene 
+        var spillerBrikker = Array(16).fill(""); 
 
-        // Ved klick så kalles funksjonen hvor språket som ønskes sendes inn som parameter:
+        // Ved klick så kalles funksjonen hvor språket "(lang)" som ønskes sendt inn som parameter:
         function switchLanguage(lang) {
         // Vi setter innholdet i playerturn til innholdet i objektet med de to versjoner. 
         // Klicker du på det norske flagget er lang = no
             document.getElementById("playerturn").innerHTML = playerTurnTranslation[lang];
      
-        // Reassign player and playermark values to update in the new language context
+        // Dette gjøres for at også disse verdiene oppdateres. Har man ikke disse metodene med,
+        // oppdateres ikke innhdold i elementene med id player og playerturn og disse forblir tomme (testet ut)
+        // til neste brikke settes (neste gang spill-funksjonen kjøres):
             document.getElementById("player").innerHTML = player;
             document.getElementById("playermark").innerHTML = playermark;
              }
@@ -258,13 +271,10 @@
                 if(antallSpill===""){
                 antallSpill=1;
                 document.getElementById("antallSpill").innerHTML = antallSpill;
-                };
-        */  
+                }; */  
 
-
-        
-
-        // Det er her vi begynner å spille ved trykke på en rute og dermed også utløse funksjonen spill:
+        // Det er her vi begynner å spille ved trykke på en rute og dermed også utløse funksjonen spill.
+        // Når brukeren klikker (handling), skal funksjonen kjøres. 
         // Da jeg ba ChatGPT å forlengre listen med eventlisteners som aktiveres når man klikker på de respektive
         // cellene, foreslås en for-løkke. Mens løkken kjører, knyttes EventListener til cellene, en om gangen. 
         // I `celle${celleTeller}` er " celle " en string mens ${} innføyer den aktuelle verdien (konkatinering). 
@@ -286,12 +296,12 @@
                     if (player === 1) {
                     //dette skjer i nettleseren:
                         document.getElementById("celle"+celle).innerHTML = "X";
-                    // befolke arrayen som holder kontroll på spillbrettet 
+                    // og i HTML: befolke arrayen som holder kontroll på spillbrettet 
                     // (kommentaren er kun omformulert for å forstå, koden er uendret her):
                         spillerBrikker[celle] = "X";
 
-                    // Dette gjør vi for å forhindre at man kan spille mens vi venter på sjekkVinner. Det er changePlayer 
-                    // funksjonen som setter statusen tilbake til "true", se nedenfor:  
+                    // Vi må forhindre at man kan spille mens vi venter på sjekkVinner: (Det er changePlayer 
+                    // funksjonen som setter statusen tilbake til "true", se lengre ned.)  
                         spillStatus = false;
 
                     } else {
@@ -312,7 +322,9 @@
                         telleSpill();
                         console.log(antallSpill);
                         document.getElementById("antallSpill").innerHTML = antallSpill;
-                        // Dette var nødvendig for å forhindre at changePlayers kjøres:
+                        // Dette var nødvendig for å forhindre at changePlayers kjøres, avslutter funksjonen,
+                        // etter samme mønster som ved false spillestatus, se slutten av denne funksjonen.  
+                        // https://www.w3schools.com/jsref/jsref_return.asp :
                         return;
                     }
                     
@@ -323,7 +335,7 @@
                     som i eksemple 2 på https://www.w3schools.com/jsref/met_win_settimeout.asp ).
 
                     For å forhindre at man kan sette spillmerket mens vi utsetter, har jeg selv kommet på at
-                    man kan eksternalisere denne prosessen gjennom
+                    man kan eksternalisere changePlayer gjennom
                     en funksjon (på samme måte som sjekkVinner) for å kunne utsette den.     
                     
                     Først trodde jeg at det var nødvendig med en egen Timeout for changePlayer, men ettersom changePlayer kalles av 
@@ -333,7 +345,7 @@
 
                 } else {
                     // "Alert" er ikke defintert (Cmd + F) andre steder og jeg trodde først at det dreide seg om en feil.
-                    // ChatGpt opplyser likevel at "alert" er forhånsdefinert JS. Fra https://www.w3schools.com/jsref/obj_window.asp 
+                    // ChatGpt opplyser likevel at "alert" er innebyget i JS. Fra https://www.w3schools.com/jsref/obj_window.asp 
                     // framgår at alert er en metode. Den står i samme liste med WindowObjects som Set(Timeout).    
                     alert("Denne cellen er opptatt. Vennligst velg en annen celle");
                     return;
@@ -381,51 +393,43 @@
                 // TIL OPPGAVE 5:
                 telleSpill();
                 document.getElementById("antallSpill").innerHTML = antallSpill;
-
                 
                 document.getElementById("playerturn").innerHTML = "Spiller " + player + " har vunnet!";
                 
                 document.getElementById("newgame").style.display = "inline-block";
 
                 /*  OPPGAVE 2: ENDRE FARGE
-                    Først misforsto jeg oppgavestillingen. Hint viser
-                    til 'document.body.style.backgroundColor = "red".' Så jeg skrev:
-                    document.body.style.backgroundColor = "#FFD700"; som endrer hele bakgrunden. 
-
-                    Jeg leste oppgavestillingen igjen og ble usikker og spurte ChatGPT hvordan man kan endre
-                    'bakgrunnsfargen i <div> med id playerturn'  
+                Først misforsto jeg oppgavestillingen. Hint viser
+                til 'document.body.style.backgroundColor = "red".' Så jeg skrev:
+                document.body.style.backgroundColor = "#FFD700"; som endrer hele bakgrunden. 
+                Jeg leste oppgavestillingen igjen og ble usikker og spurte ChatGPT hvordan man kan endre
+                'bakgrunnsfargen i <div> med id playerturn'  
                     
-                    Løsingen nedenfor hadde også fungert med bare '.background' her, men ifølge ChatGPT er .backroundColor 
-                    mer målrettet. 
+                Løsingen nedenfor hadde også fungert med bare '.background' her, men ifølge ChatGPT er ' .backroundColor ' 
+                mer målrettet. 
                 */
-
                 document.getElementById("playerturn").style.backgroundColor = "#FFD700";
-                
-                // se kommentar under <style> ovenfor (linje 10) om hvorfor dette ikke fungerer:
+                // se kommentar under <style> ovenfor (linje 11) om hvorfor dette ikke fungerer:
                 // " document.getElementById("mystyle").style.backgroundColor = "#FFD700"; "  
 
                 /*
-                OPPGAVE 4: Spørsmål til ChatGPT
-                1) 'Pls explain this structure: ' .celle '. Why is it called '.celle'. What does ' . ' stand for?'
-                Svar (forkortet): .celle er 'class name' Man kunne ha valgt .box eller andre navn. " .celle " er også en selektor 
-                (et utvalgsverktøy).
-                Det er ulike type selectors som f.eks. class (.celle) og ID (#id)
-                2) 'it seems in my code each celle has two selectors,  .celle and #id.' ? [utdrag fra koden]
-                Svar : Korrekt.
-
-                Her ser jeg at ID også brukes i eksempel på https://www.w3schools.com/jsref/prop_style_color.asp 
-                Jeg forsøker å skrive " document.getElementById("celle1").style.color = "FFD700" " på ulike plasser i <script>
-                og det fungerer.
+                OPPGAVE 4:
+                Eksempel på https://www.w3schools.com/jsref/prop_style_color.asp 
                 Logikken (egen tenkning):
                 vinnerKomboPlass1 viser til et tallverdi som tilsvarer den cellen i arrayen som inneholder brikken i vinnerkombinasjon.
                 EksempleL: vinnerkombinasjon er cellene 3,4 og 5. Da er vinnerKomboPlass1 = winningCombos[1][0] som er 3. 
+                Vi endrer ikke .celle som klasse men de individuelle cellene, derfor brukes getElementById. 
+                Jeg skulle gjerne sammenfatte de 4 linjer (4x4) for å sette fargene til ffd700 til én linje. Jeg skrev en løkke
+                først selv, men trengte hjelp av ChatGPT for å forstå at KomboPlassene må tas imot i en array først,
+                før vi kan brukke dem i løkken:
                 */
 
-                document.getElementById("celle" + vinnerKomboPlass1).style.color = "#FFD700";
-                document.getElementById("celle" + vinnerKomboPlass2).style.color = "#FFD700";
-                document.getElementById("celle" + vinnerKomboPlass3).style.color = "#FFD700";
-                document.getElementById("celle" + vinnerKomboPlass4).style.color = "#FFD700";
-
+                let vinnerKomboPlass = [vinnerKomboPlass1, vinnerKomboPlass2, vinnerKomboPlass3, vinnerKomboPlass4];
+                // index starter med 0, så løkken kjører til og med 3
+                for(fargeIndex = 0; fargeIndex <=3; fargeIndex++) {
+                    document.getElementById("celle" + vinnerKomboPlass[fargeIndex]).style.color = "#FFD700";
+                }
+                // Det skal ikke går an å spille videre för restart:
                 spillStatus = false;
             } else {
             // else = hvis runden ikke er vunnet
@@ -459,7 +463,8 @@
                 if(spillStatus === true) {
                     document.getElementById("player").innerHTML = player;
                     document.getElementById("playermark").innerHTML = playermark;
-                }}
+                }
+            } // da har vi byttet spillere 
 
         function restartGame() {
             /* TIL OPPGAVE 5: Etter maks antall spill, skal omstart føre til reset. Det hadde vært mulig å
@@ -481,7 +486,7 @@
                     }
             Maksgrense med 3 spill er vilkårlig valgt:
             */
-            if(antallSpill===3) {
+            if(antallSpill>2) {
                 antallSpill = 0
             } 
             document.getElementById("antallSpill").innerHTML = antallSpill;
@@ -490,13 +495,14 @@
             // en bakgrundsfare i CSS-blocken ovenfor:
             document.getElementById("playerturn").style.backgroundColor = "#ccc";
             
-            spillerBrikker = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+            // TIL OPPGAVE 6: endret antall, vi tømmer brikkene fra arrayen:
+            spillerBrikker = Array(16).fill("")  
             
             var celleteller = 0;
             while (celleteller < 16) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
 
-                // TIL OPPGAVE 4: tilbakestill farge - Her har jeg brukt samme mønster som for å fjerne selve brikkene: 
+                // TIL OPPGAVE 4: tilbakestill farge - Her har jeg brukt samme mønster som for å fjerne selve brikkene i linjen ovenfor: 
                 document.getElementById("celle" + celleteller).style.color = "#fff";
                 celleteller++;
             }
@@ -505,17 +511,13 @@
             
             player = 1;
             playermark = "X";
-            
+
+            // Merk at følgende skjer i en eneste linje da man hardkoder 1 og X. Men i SwitchLanguage ovenfor trenger man to linjer 
+            // ettersom man har to ulike HTML elementer som oppdateres dynamisk:
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
 
-        // her slutter restartGame
+        // her slutter restartGame, tilbake til starten men telleren er økt eller reset
          };
-                 
-    
-        
-        
-
-
 
     </script>
 </body>
