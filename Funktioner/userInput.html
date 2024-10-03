@@ -7,10 +7,23 @@
 </head>
 <body>
     <h1>Regn ut din alder</h1>
+    <p></p>
+    <label for="birthyear">Ditt foedselsaar:</label>
+    <input id="birthyear" type="number"/> <!--Why no separate closing tag?-->
+    <p>
+        <label for="year">Aar for utregning:</label>
+        <input id="year" type="number"/>
+    </p>
+<!--on cklick er en attributt som samarbeider med JS-->
+    <p><button onclick="ageCalculator()">Regn ut</button></p>
     <p id="agesentence"></p>
 
     <script>
-        function ageCalculator(birthyear = "1980", year = "2024"){
+        function ageCalculator(){
+            // Hente årstall fra input, hvorfor fungerer const?
+            const birthyear = document.getElementById("birthyear").value
+            const year = document.getElementById("year").value
+
             // Regne ut alder
             const age =  year - birthyear;
             // console.log(age);
@@ -30,7 +43,7 @@
             document.getElementById("agesentence").innerHTML = text;
         }
 
-        ageCalculator(1980, 1970);
+        //ageCalculator(1980, 1970);
 
     </script>
     
