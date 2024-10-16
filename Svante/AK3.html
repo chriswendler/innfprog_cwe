@@ -7,9 +7,10 @@
 </head>
 <body>
     <h1>Karakterkalkulator</h1>
+    <!--<form name="poengForm" onsubmit="checkInput()">-->
     <p>
         <label for="poengOppgave1">Poeng i Oppgave 1:</label>
-        <input id="poengOppgave1" type="number"/>
+        <input id="poengOppgave1" type="number" name="input1"/>
         <!--
         Hvorfor ingen closing tag av type '</input>'?: Denne lukker seg selv, 
         det er ikke mening at input skal ha et innebyget innhold.
@@ -18,11 +19,13 @@
     </p>
     <p>
         <label for="poengOppgave2">Poeng i Oppgave 2:</label>
-        <input id="poengOppgave2" type="number">
+        <input id="poengOppgave2" type="number" name="input2">
     </p>
     <p>
-        <button id="beregn">Beregn karakter</button>
+        <button id="beregn" class="disabled" disabled>Beregn karakter</button>
     </p>
+    <p>Karakter: <span id="karakter"></span></p>
+<!--</form>-->
        
 
 
@@ -31,7 +34,47 @@
     var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12;
     var resultatProsent = "";
 
-    var poeng = [poengOppgave1, poengOppgave2]
+    // var poeng = [poengOppgave1, poengOppgave2]
+
+    let karakter = "" // dette er testet med let karakter = "test"
+
+    const grades = [
+    // Jeg har korrigert stavning av "threshold"
+    {grade: "F", threshold: 0},
+    {grade: "E", threshold: 25},
+    {grade: "D", threshold: 44},
+    {grade: "C", threshold: 68},
+    {grade: "B", threshold: 88},
+    {grade: "A", threshold: 100}
+    ]
+    //console.log(grades[1]["grade"])
+    //console.log(grades.length)
+
+    const input1 = document.getElementById("poengOppgave1")
+    const input2 = document.getElementById("poengOppgave2")
+    const btn = document.getElementById("beregn")
+
+    // Knappen skal ikke være aktiv når siden lastes. Den letteste veien virker å bruke boolean attribute
+    // disabled, da slipper vi å bruke setAttribute og removeAttribute: 
+    btn.disabled = true;
+    
+    function checkInput() {
+        console.log("CkeckInput triggered");
+        if(input1.value!=='' && input2.value!=='') {
+        btn.disabled = false;
+        btn.classList.remove("disabled")
+        } else {
+        // vi trenger else-delen for å deaktivere knappen igjen dersom verdiene i feltene fjernes
+        btn.disabled = true;
+        btn.classList.add("disabled") 
+        }
+    }
+
+    // Input er en type event ved siden av f.eks. click. Side følger med om noe skjer i feltene,
+    // og kaller funksjonen hver gang:
+    input1.addEventListener("input", checkInput);
+    input2.addEventListener("input", checkInput);
+    
 
     // Merk at utregningsfunksjonen blir kalt som del av lagrePoeng-funkjsonen:
     function lagrePoeng () {
@@ -54,8 +97,6 @@
         // I if() nedenfor ble det oppdaget at grades[gi]["threshold"] resulterte i undefined fordi ordet threshold var feilstavet 
         // i karakterskalaen i teksten i Arbeidskravet  
 
-
-
             if(resultatProsent >= grades[gi]["threshold"]) {  
             // Konsolutskriften formulert her med template literal ${grades[gi]["threshold"] er foreslått av ChatGPT, men 
             // man hadde også fått "undefined" ved å skrive enkelt: console.log(grades[gi]["threshold"]); 
@@ -64,7 +105,9 @@
             // Konsolutskriften observer hvor mange ganger løkken kjører:  
             console.log(`Current matching grade: ${karakter}`);
             } 
+            console.log(karakter);
 
+            document.getElementById("karakter").innerHTML = karakter;
         
             // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F").
         // En annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
@@ -76,23 +119,6 @@
    
         } // her avslutter for-loekken
     } // her avslutter funksjon utregning 
-
-
-    const grades = [
-    // Jeg har korrigert stavning av "threshold"
- {grade: "F", threshold: 0},
- {grade: "E", threshold: 25},
- {grade: "D", threshold: 44},
- {grade: "C", threshold: 68},
- {grade: "B", threshold: 88},
- {grade: "A", threshold: 100}
-]
-//console.log(grades[1]["grade"])
-//console.log(grades.length)
-
-let karakter = "" // dette er testet med let karakter = "test"
-
-console.log(karakter);
 
 </script>
     
