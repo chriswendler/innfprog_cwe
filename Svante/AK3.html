@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Karakterkalkulator</h1>
+
+<script>
+    var poengOppgave1 = 10, poengOppgave2 = 12;
+    var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12;
+    let resultatProsent = ""
+
+    function utregning () {
+        resultatProsent = (0.3 * (poengOppgave1 / maksPoengOppgave1 * 100)) + (0.7 * (poengOppgave2 / maksPoengOppgave2 * 100))
+    }
+    utregning();
+   console.log(resultatProsent);
+
+    const grades = [
+    // Jeg har korrigert stavning av "threshold"
+ {grade: "F", threshold: 0},
+ {grade: "E", threshold: 25},
+ {grade: "D", threshold: 44},
+ {grade: "C", threshold: 68},
+ {grade: "B", threshold: 88},
+ {grade: "A", threshold: 100}
+]
+//console.log(grades[1]["grade"])
+//console.log(grades.length)
+
+let karakter = "" // dette er testet med let karakter = "test"
+
+// Vi bruker en løkke for å gå gjennom hver karakter i skalaen. For hver karakter, sjekker vi om prosenttallet er over terskelen 
+for(var gi = 0; gi < grades.length; gi++) {
+    // Her ble det oppdaget at grades[gi]["threshold"] resulterte i undefined fordi ordet threshold var feilstavet i teksten i AK
+    // console.log her med template literal ${grades[gi]["threshold"] er foreslått av ChatGPT, man hadde også
+    // fått "undefined" med bare console.log(grades[gi]["threshold"]); 
+    console.log(`Checking if ${resultatProsent} >= ${grades[gi]["threshold"]}`);
+
+    if(resultatProsent >= grades[gi]["threshold"]) {
+        karakter = grades[gi]["grade"];
+        // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F"),
+        // en annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
+        // til betingelsen ikke lengre var sant
+        // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, i dette tilfelle
+        // kunne man skrive {grade: "F", minProsent: 0, maxProsent 24} og derettter sjekket om
+        // resultatProsent <= grades[gi]["maxProsent"] && resultatProsent >= grades[gi]["minProsent"])
+        // men jeg har ikke gjort det for å holde meg til skalaen gitt i oppgavestillingen
+    } 
+}
+console.log(karakter);
+
+</script>
+    
+</body>
+</html>
+
+<!--Karakterkalkulatoren må møte følgende krav:
+
+Brukeren skal fylle inn to felter, et for poengene som er oppnådd på eksamensoppgave 1 og et for poengene oppnådd på eksamensoppgave 2.
+Brukeren skal kunne klikke på en knapp kalt "Beregn karakter". 
+Knappen skal kun fungere dersom det er fylt inn informasjon i de to feltene fra punkt 1.
+Når brukeren trykker "Beregn karakter"-knappen, skal systemet bruke formelen for å regne ut riktig svar-prosent, og bruke denne for å finne riktig karakter i karakterskalaen.
+Når systemet har funnet riktig karakter, skal karakteren vises til brukeren på nettsiden.
+-->
