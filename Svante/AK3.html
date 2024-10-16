@@ -7,17 +7,76 @@
 </head>
 <body>
     <h1>Karakterkalkulator</h1>
+    <p>
+        <label for="poengOppgave1">Poeng i Oppgave 1:</label>
+        <input id="poengOppgave1" type="number"/>
+        <!--
+        Hvorfor ingen closing tag av type '</input>'?: Denne lukker seg selv, 
+        det er ikke mening at input skal ha et innebyget innhold.
+        Type="number" medfører at brukeren kan kun skrive tall og komma, 
+        likevel behandles dette i JS som en string og må konverteres-->
+    </p>
+    <p>
+        <label for="poengOppgave2">Poeng i Oppgave 2:</label>
+        <input id="poengOppgave2" type="number">
+    </p>
+    <p>
+        <button id="beregn">Beregn karakter</button>
+    </p>
+       
+
 
 <script>
-    var poengOppgave1 = 10, poengOppgave2 = 12;
+    var poengOppgave1, poengOppgave2;
     var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12;
-    let resultatProsent = ""
+    var resultatProsent = "";
+
+    var poeng = [poengOppgave1, poengOppgave2]
+
+    // Merk at utregningsfunksjonen blir kalt som del av lagrePoeng-funkjsonen:
+    function lagrePoeng () {
+        poengOppgave1 = Number(document.getElementById("poengOppgave1").value)
+        poengOppgave2 = Number(document.getElementById("poengOppgave2").value)
+        console.log("Poengene som konvertert: " + poengOppgave1, poengOppgave2)
+        utregning();
+    };
+
+    // Når brukeren trykker "Beregn karakter"-knappen, kalles laringsfunksjonen og med dette beregningsfunkjsonen:
+    document.getElementById("beregn").addEventListener("click", lagrePoeng);
 
     function utregning () {
         resultatProsent = (0.3 * (poengOppgave1 / maksPoengOppgave1 * 100)) + (0.7 * (poengOppgave2 / maksPoengOppgave2 * 100))
-    }
-    utregning();
-   console.log(resultatProsent);
+        console.log("Resultatprosent i utregningen: " + resultatProsent);
+
+        // Vi bruker en løkke for å gå gjennom hver karakter i skalaen. For hver karakter, sjekker vi om prosenttallet er over terskelen 
+        for(var gi = 0; gi < grades.length; gi++) {
+
+        // I if() nedenfor ble det oppdaget at grades[gi]["threshold"] resulterte i undefined fordi ordet threshold var feilstavet 
+        // i karakterskalaen i teksten i Arbeidskravet  
+
+
+
+            if(resultatProsent >= grades[gi]["threshold"]) {  
+            // Konsolutskriften formulert her med template literal ${grades[gi]["threshold"] er foreslått av ChatGPT, men 
+            // man hadde også fått "undefined" ved å skrive enkelt: console.log(grades[gi]["threshold"]); 
+            console.log(`Checking if ${resultatProsent} >= ${grades[gi]["threshold"]}`);
+            karakter = grades[gi]["grade"];
+            // Konsolutskriften observer hvor mange ganger løkken kjører:  
+            console.log(`Current matching grade: ${karakter}`);
+            } 
+
+        
+            // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F").
+        // En annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
+        // til betingelsen ikke lengre var sant.
+        // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, i dette tilfelle
+        // kunne man skrive {grade: "F", minProsent: 0, maxProsent 24} og derettter sjekket om
+        // resultatProsent <= grades[gi]["maxProsent"] && resultatProsent >= grades[gi]["minProsent"])
+        // men jeg har ikke gjort det for å holde meg til skalaen gitt i oppgavestillingen
+   
+        } // her avslutter for-loekken
+    } // her avslutter funksjon utregning 
+
 
     const grades = [
     // Jeg har korrigert stavning av "threshold"
@@ -33,24 +92,6 @@
 
 let karakter = "" // dette er testet med let karakter = "test"
 
-// Vi bruker en løkke for å gå gjennom hver karakter i skalaen. For hver karakter, sjekker vi om prosenttallet er over terskelen 
-for(var gi = 0; gi < grades.length; gi++) {
-    // Her ble det oppdaget at grades[gi]["threshold"] resulterte i undefined fordi ordet threshold var feilstavet i teksten i AK
-    // console.log her med template literal ${grades[gi]["threshold"] er foreslått av ChatGPT, man hadde også
-    // fått "undefined" med bare console.log(grades[gi]["threshold"]); 
-    console.log(`Checking if ${resultatProsent} >= ${grades[gi]["threshold"]}`);
-
-    if(resultatProsent >= grades[gi]["threshold"]) {
-        karakter = grades[gi]["grade"];
-        // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F"),
-        // en annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
-        // til betingelsen ikke lengre var sant
-        // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, i dette tilfelle
-        // kunne man skrive {grade: "F", minProsent: 0, maxProsent 24} og derettter sjekket om
-        // resultatProsent <= grades[gi]["maxProsent"] && resultatProsent >= grades[gi]["minProsent"])
-        // men jeg har ikke gjort det for å holde meg til skalaen gitt i oppgavestillingen
-    } 
-}
 console.log(karakter);
 
 </script>
@@ -60,9 +101,10 @@ console.log(karakter);
 
 <!--Karakterkalkulatoren må møte følgende krav:
 
-Brukeren skal fylle inn to felter, et for poengene som er oppnådd på eksamensoppgave 1 og et for poengene oppnådd på eksamensoppgave 2.
-Brukeren skal kunne klikke på en knapp kalt "Beregn karakter". 
+1. Brukeren skal fylle inn to felter, et for poengene som er oppnådd på eksamensoppgave 1 og et for poengene oppnådd på eksamensoppgave 2.
+2. Brukeren skal kunne klikke på en knapp kalt "Beregn karakter". 
 Knappen skal kun fungere dersom det er fylt inn informasjon i de to feltene fra punkt 1.
-Når brukeren trykker "Beregn karakter"-knappen, skal systemet bruke formelen for å regne ut riktig svar-prosent, og bruke denne for å finne riktig karakter i karakterskalaen.
-Når systemet har funnet riktig karakter, skal karakteren vises til brukeren på nettsiden.
+3. Når brukeren trykker "Beregn karakter"-knappen, skal systemet bruke formelen for å regne ut riktig svar-prosent, 
+og bruke denne for å finne riktig karakter i karakterskalaen.
+4. Når systemet har funnet riktig karakter, skal karakteren vises til brukeren på nettsiden.
 -->
