@@ -6,9 +6,12 @@
     <title>Document</title>
     <style>
         body{
-            padding: 10px;
+            padding: 20px;
+            /*Her tilpasser vi bredden til innholdet: */ 
+            display: inline-block;
         }
 
+        /*resultatfeltet skal ha annen utseende enn resten: */
         .output {
            background-color: #faf0e6; 
            color: #4d2e0f;
@@ -19,45 +22,80 @@
         .karakter {
             font-size: 30px;
         }
+
+        #beregn {
+            padding: auto; 
+            font-size: 20px; 
+        }   
+
+        /*Vi fremhever at knappen er deaktivert*/
+        .disabled {
+            background-color: grey; 
+            color: lightgrey;
+            text-decoration: underline; 
+        }
+       /* Dette for å ha litt avstand mellom boksene: */
+        div { 
+            margin-bottom: 15px; 
+        }
+        /*her kommer oppsettet for en readmore*/
+        #moreMaths {
+            display: none;
+        }
     </style>
 
 </head>
-<body>
+<!--Dette fungerer kun hvis man åpner fra finder ol., ikke ved kall fra VSC: -->
+<body onload="setFocus()">
     <h1>Karakterkalkulator</h1>
-    <!--<form name="poengForm" onsubmit="checkInput()">-->
-    <p>
-        <label for="poengOppgave1">Poeng i Oppgave 1:</label>
+<!--form virker ikke så viktig hvis man ikke sender til en server, men sammen med min og max i <input> forhindrer den
+at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <https://www.w3schools.com/html/html_forms.asp">-->
+<form>
+        <div>
+        <!--Inspirasjon til label og input er hentet fra alderskalkulatoren fra forlesningen-->
+        <label for="poengOppgave1">Poeng i Oppgave 1: </label>
         <!--Bruk av min og max medfører at feltet får passende bredet. 
         this peker på det aktuellet elementet (poengOppgave1), hvis man forsøker å registrere et negativtall, settes den til
         null for å indikere til brukeren at det ikke er-->
-        <input id="poengOppgave1" type="number" name="input1" min="0" max="99" oninput="if(this.value < 0) this.value = 0;"/>
+        <input id="poengOppgave1" type="number" name="input1" min="0" max="10" oninput="if(this.value < 0) this.value = 0;"/>
         <!--
         Hvorfor ingen closing tag av type '</input>'?: Denne lukker seg selv, 
         det er ikke mening at input skal ha et innebyget innhold.
         Type="number" medfører at brukeren kan kun skrive tall og komma, 
         likevel behandles dette i JS som en string og må konverteres-->
-    </p>
-    <p>
-        <label for="poengOppgave2">Poeng i Oppgave 2:</label>
-        <input id="poengOppgave2" type="number" name="input2" min="0" max="99" oninput="if(this.value < 0) this.value = 0;"/>
-    </p>
-    <p>
-        <button id="beregn" class="disabled" disabled>Beregn karakter</button>
-    </p>
-    <p class="output">Karakter: <span id="karakter" style="font-weight: bold;"></span></p>
-<!--</form>-->
-       
+    </div>
+    <div>
+        <label for="poengOppgave2">Poeng i Oppgave 2: </label>
+        <input id="poengOppgave2" type="number" name="input2" min="0" max="12" oninput="if(this.value < 0) this.value = 0;"/>
+    </div>
+</form>
+    <p>Du må skrive inn tall for å kunne beregne! Kalkulatoren avrunder ikke.</p>
+    <section>
+        <!--Knapper er i utgangspunktet deaktivert:-->
+        <button id="beregn" class="disabled">Beregn karakter</button>
+    </section>
 
+    <p class="output">Karakter: <span id="karakter" style="font-weight: bold;"></span></p>
+
+    <section>
+        <p>Oppgave 1 veier 30%. Oppgave 2 veier 70%.
+            <!--Her kommer innholdet i readmore:-->
+            <p id="moreMaths">
+            Beregningsformelen: <br> (0.3 * (PoengOppgave1 / MaksimaltPoengOppgave1 * 100)) + (0.7 * (PoengOppgave2 / MaksimaltPoengOppgave2 * 100))
+            </p>
+        </p>
+        <button id="showMore" onclick="visBeregning()">Les mer om hvordan karakteren beregnes &#8730;</button>
+    </section>
 
 <script>
     var poengOppgave1, poengOppgave2;
-    var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12;
-    var resultatProsent = "";
+    // Her har jeg hardkodet makspoengene, ettersom oppgavestillingen sier at det skal være kun to felter for bruker-input.
+    var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12
 
     let karakter = "" // dette er testet med let karakter = "test"
 
     const grades = [
-    // Jeg har korrigert stavning av "threshold"
+    // Jeg har korrigert stavning av "threshold":
     {grade: "F", threshold: 0},
     {grade: "E", threshold: 25},
     {grade: "D", threshold: 44},
@@ -78,24 +116,41 @@
     
     function checkInput() {
         console.log("CkeckInput triggered");
-        if(input1.value!=='' && input2.value!=='') {
-        btn.disabled = false;
-        btn.classList.remove("disabled")
-        } else {
-        // vi trenger else-delen for å deaktivere knappen igjen dersom verdiene i feltene fjernes
-        btn.disabled = true;
-        btn.classList.add("disabled") 
-        }
-    }
+        // Vi må først sjekke om poengtall er større enn maks. Hadde man plassert omvendt - med sjekk for tom felt -
+        // vil testen for maks antall poeng først utløses dersom begge felt utfylles.
+        // Operatoren || sjekker en av betingelsene er oppfylt
+        if(input1.value > maksPoengOppgave1 || input2.value > maksPoengOppgave2) {
+            btn.disabled = true;
+            btn.classList.add("disabled")
+            // Alertmetoden er brukt i Arbeidskrav 2 og beskrives her https://www.w3schools.com/jsref/met_win_alert.asp :
+            alert("Sjekk maksimal mulige poengtall"); 
+
+            // Det er kun ved tillatt antall poeng OG hvis inget felt er ledig, at vi aktiverer knappen:
+            } else if (input1.value!=='' && input2.value!=='') {
+            btn.disabled = false;
+            btn.classList.remove("disabled")
+            } else {
+            // vi trenger else-delen for å deaktivere knappen igjen dersom verdiene i feltene fjernes
+            btn.disabled = true;
+            btn.classList.add("disabled") 
+            }       
+         } // her slutter checkInput
+    
 
     // Input er en type event ved siden av f.eks. click. Side følger med om noe skjer i feltene,
     // og kaller funksjonen hver gang:
     input1.addEventListener("input", checkInput);
     input2.addEventListener("input", checkInput);
     
+    // Det er ikke gitt noen vilkår om at man må ha et mininmum antall poeng i hver av oppgavene, som f.eks.
+    // ved deleksamener. Vi må derfor ikke separat sjekke og telle antall beståtte oppgaver. 
 
     // Merk at utregningsfunksjonen blir kalt som del av lagrePoeng-funkjsonen:
     function lagrePoeng () {
+        // selv om inputfeltene er av type number, mottas det en string i JS som må konverteres:
+        // https://www.w3schools.com/jsref/jsref_number.asp
+        // Det står ingenting om halve poeng eller desimatall i prosentvediene. Vi kjenner heller ikke avrundings-
+        // regler i det aktuelle regelverket. Jeg tillater derfor desimaler og skriver heller en veiledning. 
         poengOppgave1 = Number(document.getElementById("poengOppgave1").value)
         poengOppgave2 = Number(document.getElementById("poengOppgave2").value)
         console.log("Poengene som konvertert: " + poengOppgave1, poengOppgave2)
@@ -106,6 +161,9 @@
     document.getElementById("beregn").addEventListener("click", lagrePoeng);
 
     function utregning () {
+        // Jeg hadde prosentvariablen først øverst, men ChatGPT gjør oppmerksom på at den kan med fordel
+        // kun stå i den funksjonen som bruker det (da den bare brukes her):
+        let resultatProsent = "";
         resultatProsent = (0.3 * (poengOppgave1 / maksPoengOppgave1 * 100)) + (0.7 * (poengOppgave2 / maksPoengOppgave2 * 100))
         console.log("Resultatprosent i utregningen: " + resultatProsent);
 
@@ -123,20 +181,57 @@
             // Konsolutskriften observer hvor mange ganger løkken kjører:  
             console.log(`Current matching grade: ${karakter}`);
             } 
-            console.log(karakter);
 
+            // Vi skriver ut karakter:
             document.getElementById("karakter").innerHTML = karakter;
         
-            // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F").
+        // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F").
         // En annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
         // til betingelsen ikke lengre var sant.
         // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, i dette tilfelle
         // kunne man skrive {grade: "F", minProsent: 0, maxProsent 24} og derettter sjekket om
         // resultatProsent <= grades[gi]["maxProsent"] && resultatProsent >= grades[gi]["minProsent"])
         // men jeg har ikke gjort det for å holde meg til skalaen gitt i oppgavestillingen
+
+        // Etter en bereging, gjør vi det lettere for saksbehandleren/brukeren å gå til neste sak:
+            setFocus();
    
         } // her avslutter for-loekken
     } // her avslutter funksjon utregning 
+
+    // Nedenstående er laget etter modellen fra: https://www.w3schools.com/howto/howto_js_read_more.asp
+    // men måtte endres litt. W3 sin eksempel opererer med en tredje element, dots, som 
+    // ved første click på readmore knappen er tom (console.log(element.style.display) viser ingenting). 
+    // I mitt tilfelle bruker jeg teksten selv om element i if-testen.
+    function visBeregning(){
+        console.log("visBeregning called");
+        var more = document.getElementById("moreMaths")
+        var btnText = document.getElementById("showMore")
+        
+        console.log("Current display style:", more.style.display);
+        // Da vi kun har satt display style i CSS, viser console.log(element.style.display) ingenting (den sjekker kun JS). If-testen
+        // må derfor først sjekke for inline. Annet enn inline (else) inkluderer den tomme verdien. Det hadde også fungert
+        // med {display="none"} med parentes i CSS men det er i utgangspunktet feil syntax. 
+        
+        if(more.style.display === "inline") {
+            console.log("Current display style:", more.style.display);
+            more.style.display = "none";
+            // Her overskriver vi det hardkodete tekst i knappen med identisk innerHTML:
+            btnText.innerHTML = "Les mer om hvordan karakteren beregnes &#8730;"
+            } else {
+            // Annet enn inline, herunder 
+            more.style.display = "inline";
+            console.log("Current display style:", more.style.display);
+            btnText.innerHTML = "Read less"
+        } 
+    } // her avslutter visBeregning 
+
+    // For at dette fungerer onload, må man åpne filen på annen måte en fra VSC ved F5. Ellers fungerer det kun on refresh
+    // Kunne dessvette ikke løses :( 
+    function setFocus() {
+            input1.focus();
+            console.log("focus called")
+    }
 
 </script>
     
