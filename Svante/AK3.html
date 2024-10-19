@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+
         body{
             padding: 20px;
-            /*Her tilpasser vi bredden til innholdet: */ 
+            /*Her tilpasser vi bredden til innholdet:*/ 
             display: inline-block;
+        }
+
+        label {
+            margin-right: 10px;
         }
 
         /*resultatfeltet skal ha annen utseende enn resten: */
@@ -35,9 +40,10 @@
             text-decoration: underline; 
         }
        /* Dette for å ha litt avstand mellom boksene: */
-        div { 
-            margin-bottom: 15px; 
+        .inputBox { 
+            margin: 10px; 
         }
+
         /*her kommer oppsettet for en readmore*/
         #moreMaths {
             display: none;
@@ -48,49 +54,68 @@
 <!--Dette fungerer kun hvis man åpner fra finder ol., ikke ved kall fra VSC: -->
 <body onload="setFocus()">
     <h1>Karakterkalkulator</h1>
+
 <!--form virker ikke så viktig hvis man ikke sender til en server, men sammen med min og max i <input> forhindrer den
-at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <https://www.w3schools.com/html/html_forms.asp">-->
+at man kan bruke opp og ned knappene inne i input feltet for å gå utenfor rammen https://www.w3schools.com/html/html_forms.asp -->
 <form>
-        <div>
+    <div class="inputBox">
         <!--Inspirasjon til label og input er hentet fra alderskalkulatoren fra forlesningen-->
         <label for="poengOppgave1">Poeng i Oppgave 1: </label>
-        <!--Bruk av min og max medfører at feltet får passende bredet. 
-        this peker på det aktuellet elementet (poengOppgave1), hvis man forsøker å registrere et negativtall, settes den til
-        null for å indikere til brukeren at det ikke er-->
-        <input id="poengOppgave1" type="number" name="input1" min="0" max="10" oninput="if(this.value < 0) this.value = 0;"/>
+
+        <!--
+        Bruk av min og max attribut medfører at feltet får passende bredet. 
+        'this' er foreslått av ChatGPT og peker på det aktuellet elementet som er <input>, 
+        logikk: hvis man forsøker å registrere et tall utenfor rammen, settes tallet til 0, 10 eller 12 for å indikere til brukeren 
+        at det ikke er mulig. 
+        Input-elementet blir lang. For bedre lesbarhet kunne man også ha kalt checkInput() for validering,
+        men jeg vil demonstrere at logikken fungerer inline: 
+        I utrykk max="99" kan man ikke erstatte med variabelen maksPoeng :( fordi attributer i HTML er statiske (ChatGPT). 
+        99 er valgt for bredden-->
+        <input id="poengOppgave1" type="number" name="input1" min="0" max="99" 
+        oninput="if(this.value < 0) this.value = 0; 
+        else if(this.value > maksPoeng1) this.value = maksPoeng1"/>
         <!--
         Hvorfor ingen closing tag av type '</input>'?: Denne lukker seg selv, 
         det er ikke mening at input skal ha et innebyget innhold.
         Type="number" medfører at brukeren kan kun skrive tall og komma, 
-        likevel behandles dette i JS som en string og må konverteres-->
+        likevel behandles dette i JS som en string og må konverteres med t.eks. Number() eller ParseInt()-->
     </div>
-    <div>
+    <div class="inputBox">
         <label for="poengOppgave2">Poeng i Oppgave 2: </label>
-        <input id="poengOppgave2" type="number" name="input2" min="0" max="12" oninput="if(this.value < 0) this.value = 0;"/>
+        <input id="poengOppgave2" type="number" name="input2" min="0" max="99" 
+        oninput="if(this.value < 0) this.value = 0; 
+        else if(this.value > maksPoeng2) this.value = maksPoeng2"/>
     </div>
 </form>
-    <p>Du må skrive inn tall for å kunne beregne! Kalkulatoren avrunder ikke.</p>
-    <section>
-        <!--Knapper er i utgangspunktet deaktivert:-->
-        <button id="beregn" class="disabled">Beregn karakter</button>
-    </section>
 
+    <!--Knappen har en klasse for visuell framheving:-->
+    <button id="beregn" class="disabled" onmouseover="mouseOver()">Beregn karakter</button>
+    
+    <!--Her endrer vi stiler inline:-->      
     <p class="output">Karakter: <span id="karakter" style="font-weight: bold;"></span></p>
 
     <section>
-        <p>Oppgave 1 veier 30%. Oppgave 2 veier 70%.
+        <p>Oppgave 1 veier 30%. Oppgave 2 veier 70%.</p>
             <!--Her kommer innholdet i readmore:-->
-            <p id="moreMaths">
-            Beregningsformelen: <br> (0.3 * (PoengOppgave1 / MaksimaltPoengOppgave1 * 100)) + (0.7 * (PoengOppgave2 / MaksimaltPoengOppgave2 * 100))
-            </p>
-        </p>
-        <button id="showMore" onclick="visBeregning()">Les mer om hvordan karakteren beregnes &#8730;</button>
+            <div id="moreMaths">
+                <p>
+                Kalkulatoren avrunder ikke.
+                </p>
+                <h3>Beregningsformelen:</h3> 
+                <p>(0.3 * (PoengOppgave1 / MaksimaltPoengOppgave1 * 100)) + <br> 
+                (0.7 * (PoengOppgave2 / MaksimaltPoengOppgave2 * 100))
+                </p> 
+                <canvas id="drawing-area" style="border: 2px solid black;"></canvas>
+            </div>
+            <div>
+                <button id="showMore" onclick="visBeregning()" style="margin: 10px;">Les mer om hvordan karakteren beregnes &#8730;</button>
+            </div>        
     </section>
 
 <script>
     var poengOppgave1, poengOppgave2;
     // Her har jeg hardkodet makspoengene, ettersom oppgavestillingen sier at det skal være kun to felter for bruker-input.
-    var maksPoengOppgave1 = 10, maksPoengOppgave2 = 12
+    var maksPoeng1 = 10, maksPoeng2 = 12
 
     let karakter = "" // dette er testet med let karakter = "test"
 
@@ -113,28 +138,72 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
     // Knappen skal ikke være aktiv når siden lastes. Den letteste veien virker å bruke boolean attribute
     // disabled, da slipper vi å bruke setAttribute og removeAttribute: 
     btn.disabled = true;
+
+    // Dette for å ha det med etter canvas forelesning. Vises kun i readmore:
+    const canvas = document.getElementById("drawing-area")
+    canvas.width = 260
+    canvas.height = 100
+    const ctx = canvas.getContext("2d")
+
+    // 2 sirkler for å illustrere hvordan oppgavene vektes:
+    ctx.beginPath();
+    ctx.arc(50,50,15,0,2*Math.PI);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(160,50,35,0,2*Math.PI);
+    ctx.stroke();
+
+    // TEXT
+    ctx.beginPath()
+    ctx.font = "15px Arial"
+    ctx.strokeText("30%", 50, 25)
+    ctx.strokeText("70%", 180, 20)
+    ctx.closePath()  
+    
+    // Variablen må deklareres utenfor funksjonen, da den ellers alltid går tilbake til 0 når funkjonen kalles:
+    let mouseOverCount = 0;
+
+    let statusUtfylt;
+    
+    function checkStatus (){
+        statusUtfylt = input1.value!=='' && input2.value!=='';
+    }
+    
+    function mouseOver(){
+        checkStatus();
+        if (!statusUtfylt) {
+            mouseOverCount++
+            // Dette for at det ikke skal irritere saksbehandleren:
+            if(mouseOverCount <= 1) {
+                 // Alertmetoden er brukt i Arbeidskrav 2 og beskrives her https://www.w3schools.com/jsref/met_win_alert.asp :
+                alert("Du må skrive inn tall for å kunne beregne!"); 
+            }
+        }  
+    }
     
     function checkInput() {
         console.log("CkeckInput triggered");
         // Vi må først sjekke om poengtall er større enn maks. Hadde man plassert omvendt - med sjekk for tom felt -
         // vil testen for maks antall poeng først utløses dersom begge felt utfylles.
-        // Operatoren || sjekker en av betingelsene er oppfylt
-        if(input1.value > maksPoengOppgave1 || input2.value > maksPoengOppgave2) {
-            btn.disabled = true;
-            btn.classList.add("disabled")
-            // Alertmetoden er brukt i Arbeidskrav 2 og beskrives her https://www.w3schools.com/jsref/met_win_alert.asp :
-            alert("Sjekk maksimal mulige poengtall"); 
-
-            // Det er kun ved tillatt antall poeng OG hvis inget felt er ledig, at vi aktiverer knappen:
-            } else if (input1.value!=='' && input2.value!=='') {
+        // Operatoren || sjekker om en av betingelsene er oppfylt
+        checkStatus();
+        if(statusUtfylt) {
             btn.disabled = false;
             btn.classList.remove("disabled")
             } else {
             // vi trenger else-delen for å deaktivere knappen igjen dersom verdiene i feltene fjernes
             btn.disabled = true;
             btn.classList.add("disabled") 
-            }       
-         } // her slutter checkInput
+            }      
+        // Dette kunne jeg ha skrivet kortere med toggle() metoden (iflg. ChatGPT), 
+        // men jeg skulle gjerne demonstrere den nestede if-testen
+        // observasjon: man kan lagre statusen i en variable og toggle() kan brukes med to argumenter:
+        // const utfyltStatus = input1.value!=='' && input2.value!==''
+        // btn.classList.toggle(disabled, !utfyltStatus) - her legger vi til disabled klassen til button-element dersom
+        // utfylt IKKE er sant, dvs. dersom et felt er ikke utfylt   
+
+        } // her slutter checkInput
     
 
     // Input er en type event ved siden av f.eks. click. Side følger med om noe skjer i feltene,
@@ -150,7 +219,7 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
         // selv om inputfeltene er av type number, mottas det en string i JS som må konverteres:
         // https://www.w3schools.com/jsref/jsref_number.asp
         // Det står ingenting om halve poeng eller desimatall i prosentvediene. Vi kjenner heller ikke avrundings-
-        // regler i det aktuelle regelverket. Jeg tillater derfor desimaler og skriver heller en veiledning. 
+        // regler i det aktuelle regelverket. Jeg tillater derfor desimaler og skriver heller en veiledning (ReadMore). 
         poengOppgave1 = Number(document.getElementById("poengOppgave1").value)
         poengOppgave2 = Number(document.getElementById("poengOppgave2").value)
         console.log("Poengene som konvertert: " + poengOppgave1, poengOppgave2)
@@ -164,7 +233,7 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
         // Jeg hadde prosentvariablen først øverst, men ChatGPT gjør oppmerksom på at den kan med fordel
         // kun stå i den funksjonen som bruker det (da den bare brukes her):
         let resultatProsent = "";
-        resultatProsent = (0.3 * (poengOppgave1 / maksPoengOppgave1 * 100)) + (0.7 * (poengOppgave2 / maksPoengOppgave2 * 100))
+        resultatProsent = (0.3 * (poengOppgave1 / maksPoeng1 * 100)) + (0.7 * (poengOppgave2 / maksPoeng2 * 100))
         console.log("Resultatprosent i utregningen: " + resultatProsent);
 
         // Vi bruker en løkke for å gå gjennom hver karakter i skalaen. For hver karakter, sjekker vi om prosenttallet er over terskelen 
@@ -175,9 +244,11 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
 
             if(resultatProsent >= grades[gi]["threshold"]) {  
             // Konsolutskriften formulert her med template literal ${grades[gi]["threshold"] er foreslått av ChatGPT, men 
-            // man hadde også fått "undefined" ved å skrive enkelt: console.log(grades[gi]["threshold"]); 
+            // man hadde også fått "undefined" ved å skrive enkelt: console.log(grades[gi]["threshold"]) ved feilstaving i skalaen: 
             console.log(`Checking if ${resultatProsent} >= ${grades[gi]["threshold"]}`);
+
             karakter = grades[gi]["grade"];
+
             // Konsolutskriften observer hvor mange ganger løkken kjører:  
             console.log(`Current matching grade: ${karakter}`);
             } 
@@ -188,7 +259,7 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
         // Her er det avgjørende å ikke inkludere break; da dette vil avbryte etter sjekk av første key-value par ("F").
         // En annen løsning hadde vært å snu skalaen på hodet, da hadde funkjsonen satt "A" først også jobbet seg nedover 
         // til betingelsen ikke lengre var sant.
-        // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, i dette tilfelle
+        // En mer treffsikker vei å kode karakterskalaen på, er modellen brukt i videoøvelsen Svantes karakter på LMS, da
         // kunne man skrive {grade: "F", minProsent: 0, maxProsent 24} og derettter sjekket om
         // resultatProsent <= grades[gi]["maxProsent"] && resultatProsent >= grades[gi]["minProsent"])
         // men jeg har ikke gjort det for å holde meg til skalaen gitt i oppgavestillingen
@@ -224,6 +295,8 @@ at man kan bruke opp og ned knappene i input feltet for å gå utenfor rammen <h
             console.log("Current display style:", more.style.display);
             btnText.innerHTML = "Read less"
         } 
+
+   
     } // her avslutter visBeregning 
 
     // For at dette fungerer onload, må man åpne filen på annen måte en fra VSC ved F5. Ellers fungerer det kun on refresh
